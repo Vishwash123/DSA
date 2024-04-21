@@ -1,0 +1,413 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+
+//
+//class stack{
+//    int *arr; //THE ARRAY TO STORE ELEMENTS
+//    int size; //THE ARRAY/STACK SIZE
+//    int top;  //THE TOP INDEX
+//
+//    stack(int size) //CONSTRUCTOR
+//    {
+//        this->size=size;
+//        arr=new int[size];
+//        top = -1;
+//
+//    }
+//
+//
+//    void push(int val){
+//
+//        if (top<=size-1)
+//        {
+//            top++;
+//            arr[top]=val;
+//        }
+//        else
+//        {
+//            cout<<"Stack overflow"<<endl;
+//        }
+//    }
+//
+//    void pop(){
+//
+//        if (top!=-1)
+//        {
+//            top--;
+//        }
+//        else
+//        {
+//            cout<<"Stack underflow"<<endl;
+//        }
+//
+//    }
+//
+//
+//
+//    int peek(){
+//        if(top>=0 && top<size)
+//        return arr[top];
+//        else
+//        {
+//            cout<<"Stack is empty"<<endl;
+//        }
+//    }
+//
+//    bool isEmpty(){
+//
+//        if (top==-1)
+//        {
+//            return true;
+//        }
+//        else
+//        {
+//            return false;
+//        }
+//
+//    }
+//};
+
+//class Stack{
+//public:
+//    int *arr;
+//    int top;
+//    int size;
+//
+//    Stack(int size){
+//        this->size = size;
+//        arr = new int[size];
+//        top = -1;
+//    }
+//
+//
+//    void push(int val)
+//    {
+//        if (top<size-1)
+//        {
+//            top++;
+//            arr[top] = val;
+//
+//        }
+//        else
+//        {
+//            cout<<"Stack overflow"<<endl;
+//        }
+//    }
+//
+//
+//    void pop(){
+//        if (top!=-1)
+//        {
+//         top--;
+//        }
+//        else
+//        {
+//            cout<<"Stack underflow"<<endl;
+//        }
+//
+//    }
+//
+//
+//    int peek(){
+//        if (top!=-1)
+//        {
+//            return arr[top];
+//        }
+//        else
+//        {
+//            cout<<"Stack is empty"<<endl;
+//            return -1;
+//        }
+//
+//
+//    }
+//
+//    bool isEmpty(){
+//        if (top==-1)
+//        {
+//            cout<<"STACK IS EMPTY"<<endl;
+//            return true;
+//        }
+//        else
+//        {
+//            cout<<"STACK IS NOT EMPTY"<<endl;
+//            return false;
+//        }
+//    }
+//};
+
+
+
+class Node{
+public:
+    char data;
+    Node* next;
+    Node* prev;
+
+    Node(int data)
+    {
+        this->data = data;
+        next = NULL;
+        prev=NULL;
+    }
+};
+
+
+
+
+
+void insertAtTail(Node* &tail,int data)
+{
+    Node* temp = new Node(data);
+    if (tail==NULL)
+    {
+        tail=temp;
+        return;
+    }
+    tail->next=temp;
+    temp->prev=tail;
+    tail=temp;
+
+
+}
+
+
+
+void deleteFromTail(Node* &tail)
+{
+    Node* temp=tail;
+    if (tail->prev==NULL)
+    {
+        tail=NULL;
+        return;
+    }
+    tail=tail->prev;
+    tail->next=NULL;
+    delete temp;
+}
+
+
+
+class NodeStack{
+public:
+
+   int top;
+   int size;
+
+    Node* tail;
+
+    NodeStack(int size)
+    {
+
+        tail = NULL;
+        this->size=size;
+        this->top=0;
+
+    }
+
+    void push(int data){
+        if (top<size) {
+            cout<<"pushing : "<<data<<endl;
+            top++;
+            insertAtTail(tail, data);
+        }
+        else
+        {
+            cout<<"Stack Overflow"<<endl;
+        }
+
+    }
+
+    void pop(){
+        if (top>0){
+         cout<<"popping : "<<tail->data<<endl;
+        top--;
+        deleteFromTail(tail);}
+        else
+        {
+            cout<<"Stack Underflow"<<endl;
+        }
+        return;
+    }
+
+    char peek(){
+        if (top>0) {
+            cout<<"Top : ";
+            cout << tail->data << endl;
+            return tail->data;
+        }
+        else
+        {
+            cout<<"Stack is empty"<<endl;
+        }
+    }
+
+    bool isEmpty(){
+       // cout<<"checking empty or not : "<<endl;
+        if (top>0)
+        {
+
+           // cout<<"stack is not empty"<<endl;
+            return false;
+        }
+        else
+        {
+            //cout<<"stack is empty"<<endl;
+            return true;
+        }
+    }
+};
+
+
+
+
+
+
+
+
+void revstack(string &s)
+{
+    NodeStack st(s.length());
+    int i=0;
+    while(i<s.length())
+    {
+        st.push(s[i]);
+        i++;
+    }
+    int j=0;
+    while(!st.isEmpty() )
+    {
+        s[j]=st.peek();
+        st.pop();
+        j++;
+    }
+}
+
+int main() {
+    /*
+
+==================================================================================================================================================================
+==================================================================================================================================================================
+
+    // STACK : LIFO : LAST IN FIRST OUT. EG : STACK OF BOOKS OR PLATES
+    // ADDING INTO STACK IS CALLED ---->PUSH<----
+    // REMOVING TOP ELEMENT FROM STACK IS CALLED ---->POP<----. THIS IS THE ONLY REMOVE OPERATION WE CAN PERFORM
+    // SEEING/ACCESSING THE TOP ELEMENT IS CALLED PEEK
+    // THERE IS A FUNCTION WHICH TELLS US IF STACK IS EMPTY OR NOT CALLED ISEMPTY
+
+==================================================================================================================================================================
+==================================================================================================================================================================
+
+    // USING STL :
+    // stack<int> st;  declares a stack
+    // st.push(2) pushes data
+    // st.pop() pops top element;
+    // st.top() return top element;
+    // st.empty() returns true or false based on whether the stack is empty or not
+    // st.size() return size of the stack;
+
+==================================================================================================================================================================
+==================================================================================================================================================================*/
+//    stack<int> st;
+//    st.push(2);
+//    st.push(3);
+//    st.pop();
+//    cout<<st.top()<<endl;
+//    cout<<st.empty()<<endl;
+//    cout<<st.size()<<endl;
+//    return 0;
+
+/*
+
+==================================================================================================================================================================
+==================================================================================================================================================================
+
+ //   IMPLEMENTATION OF STACK USING ARRAY  :
+ //   *arr: we need an array pointer *arr
+ //   top : is an index where i push element. initially it is -1;
+ //   size: it is the size of array
+ //   push: function to add element on top. First it check if space is available or not. if not stack overflow otherwise top++ and insert at this top index;
+ //   pop : function to remove element on top. First check whether stack is filled or not. if not that means no element is present and this mean stack underflow
+            other wise we reduce top--;
+ //   empty: to check empty check if top==-1;
+ //   size : check if stack is empty or not. if it isnt i has a size we return top+1;
+ //   top  : check if stack is empty or not and whether or not top < size then return the top value;
+
+  SEE THE CLASS MADE ABOVE FOR REFERENCE
+
+==================================================================================================================================================================
+==================================================================================================================================================================*/
+
+
+//  Stack st(5);
+//  cout<<"INITIALLY : "<<endl;
+//  st.isEmpty();
+//  cout<<st.peek()<<endl;
+//  cout<<st.size<<endl;
+//  st.push(22);
+//  st.push(43);
+//  st.push(44);
+//  cout<<"AFTER PUSHING : "<<endl;
+//    st.isEmpty();
+//    cout<<st.peek()<<endl;
+//    cout<<st.size<<endl;
+//    st.pop();
+//    cout<<"AFTER POPPING : "<<endl;
+//    st.isEmpty();
+//    cout<<st.peek()<<endl;
+//    cout<<st.size<<endl;
+//
+//  cout<<st.peek()<<endl;
+//
+//  st.pop();
+//  st.pop();
+//  st.pop();
+//    st.isEmpty();
+//    cout<<st.peek()<<endl;
+//    cout<<st.size<<endl;
+//
+//
+//    for (int i=0;i<5;i++)
+//    {
+//        st.push(1);
+//    }
+//    cout<<st.top<<endl;
+
+/*
+//NodeStack st(5);
+//st.isEmpty();
+//st.push(1);
+//st.isEmpty();
+/st.push(2);
+st.push(3);
+st.peek();
+st.pop();
+st.peek();
+st.isEmpty();
+st.pop();
+    cout<<st.top<<endl;
+st.pop();
+
+st.isEmpty();
+st.pop();
+
+for (int i=0;i<=5;i++)
+{
+    st.push(1);
+}*/
+
+
+
+
+//string s;
+//getline(cin,s);
+//cout<<s<<endl;
+//revstack(s);
+//
+//cout<<s<<endl;
+
+
+
+
+}
