@@ -1,0 +1,462 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+class node{
+public:
+    int data;
+    node* left;
+    node* right;
+
+    node(int d){
+        this->data = d;
+        this->left = nullptr;
+        this->right = nullptr;
+    }
+
+
+
+
+};
+
+
+node* buildTree(node* &root){
+    cout<<"Enter the data : "<<endl;
+    int data;
+    cin>>data;
+    root = new node(data);
+
+    if(data == -1)
+    {
+        return NULL;
+    }
+
+    cout<<"For the data for left of "<<data<<endl;
+    root->left = buildTree(root->left);
+    cout<<"For the data for right of "<<data<<endl;
+    root->right = buildTree(root->right);
+
+    return root;
+
+}
+
+//IN LEVEL ORDER TRAVERSAL WE PRINT ALL THE NODES AT ONE LEVEL BEFORE MOPVING ONTO THE NEXT AND REAPEAT UNTIL ALL NODE SIN A LEVEL ARE NOT ZERO
+//ALSO CALLED BREADTH FIRST SEARCH
+void levelOrderTraversal(node* root){
+    queue<node*> q;
+    q.push(root);
+    q.push(NULL);
+
+    while(!q.empty()) {
+        node *temp = q.front();
+
+        q.pop();
+        if (temp == NULL) {
+            cout << endl;
+            if (!q.empty()) {
+                q.push(NULL);
+            }
+        }
+
+
+        else {
+            cout << temp->data << " ";
+            if (temp->left!=NULL) {
+                q.push(temp->left);
+            }
+            if (temp->right!=NULL) {
+                q.push(temp->right);
+            }
+        }
+    }
+}
+
+
+
+void reverseLevelOrderTraversal(node* root)
+{
+    stack<node*> st;
+    queue<node*> q;
+    q.push(root);
+    q.push(NULL);
+
+    while(!q.empty()){
+        {
+            node* temp = q.front();
+            q.pop();
+            if(temp==NULL)
+            {
+                st.push(NULL);
+                if(!q.empty())
+                {
+                    q.push(NULL);
+                }
+            }
+            else
+            {
+                st.push(temp);
+                if(temp->right!=NULL)
+                {
+                    q.push(temp->right);
+                }
+                if(temp->left!=NULL)
+                {
+                    q.push(temp->left);
+                }
+
+            }
+        }
+
+    }
+
+    while(!st.empty())
+    {
+        if(st.top()==NULL)
+        {
+            cout<<endl;
+            st.pop();
+        }
+        else
+        {
+            cout<<st.top()->data<<" ";
+            st.pop();
+        }
+    }
+}
+
+//
+//                                                                   1
+//                                                                  / \
+//                                                                 /   \
+//                                                                /     \
+//                                                               9       7
+//                                                              /\       /
+//                                                             /  \     /
+//                                                            4    8   3
+
+//for this tree :
+//IN   :  4 9 8 1 3 7
+//PRE  :  1 9 4 8 7 3
+//POST :  4 8 9 3 7 1
+void  preOrderTraversal(node* root)
+{
+
+    if(root == NULL)
+    {
+        return;
+    }
+    cout<<root->data<<" ";
+    preOrderTraversal(root->left);
+
+    preOrderTraversal(root->right);
+
+
+
+
+}
+
+void  inOrderTraversal(node* root)
+{
+
+        if(root == NULL)
+        {
+            return;
+        }
+
+    inOrderTraversal(root->left);
+    cout<<root->data<<" ";
+    inOrderTraversal(root->right);
+
+
+
+}
+
+void  postOrderTraversal(node* root)
+{
+
+    if(root == NULL)
+    {
+        return;
+    }
+
+    postOrderTraversal(root->left);
+
+    postOrderTraversal(root->right);
+    cout<<root->data<<" ";
+
+
+
+}
+
+
+
+void buildTreeFromLevelOrder(node* &root){
+    queue<node*> q;
+    cout<<"Enter data for root"<<endl;
+    int data;
+    cin>>data;
+    root = new node(data);        //insert a root node into queue initially
+    q.push(root);
+   //then just like we did in level order traversal we just pop queue front and then we take in data for left and irght if eny one if -1 we dont make a new node
+   // otherwise we make new nodes and store them in left and right respectively and push them back coz in futute these nodes might also have children nodes
+
+   //there is no null case here as we only needed it because when we wanted to print levels differently
+    while(!q.empty())
+    {
+        node* temp = q.front();
+        q.pop();
+        cout<<"Enter left node of "<<temp->data<<endl;
+        int ld;
+        cin>>ld;
+        if(ld!=-1)
+        {
+            temp->left=new node(ld);
+            q.push(temp->left);
+        }
+
+        cout<<"Enter right node of "<<temp->data<<endl;
+        int rd;
+        cin>>rd;
+        if(rd!=-1)
+        {
+            temp->right=new node(rd);
+            q.push(temp->right);
+        }
+
+
+
+    }
+}
+
+
+
+int main() {
+    /*
+    ===================================================================================================================================================================
+    ===================================================================================================================================================================
+
+                                                                  << INTRODUCTION >>
+
+
+       TREE : IT IS A NON LINEAR DATA STRUCTURE IN WHICH ONE NODE CAN BE CONNECTED TO MANY
+
+       1) NODE : AN ELEMENT IN A TREE IS CALLED A NODE. it contains data
+       2) ROOT : TOP NODE OF TREE
+       3) CHILDREN : 3->9 MEANS 9 IS CHILD OF 3
+       4) PARENT : IN ABOVE EXAMPLE 3 IS PARENT OF 3
+       5) SIBLING : NODES HAVING SAME PARENTS
+       6) ANCESTORS : TAKE A NODE AND TRAVEL UPWARDS ALL THE NODES THAT APPEAR TRAVELLING UPWARDS ARE ANCESTORS OF THAT NODE
+       7) DESCENDANT : REVERSE OF ANCESTOR
+       8) LEAF NODE : NODES WITH NO CHILDREN
+       9) LEVELS : YOU CAN SAY THE SAME GENERATION HAHA. SEE EXAMPLE
+
+                                         PARENT OF 9 AND 7 = 1     1      ROOT NODE                                                                LEVEL 0
+                                                                  / \
+                                                                 /   \
+                                                                9     7     CHILDREN OF 1 = 9 AND 7                                                LEVEL 1
+                                                               /\    / \     AND SINCE THEY SHARE COMMON PARENT 1 THEY ARE SIBLINGS
+                                                              /  \  NA  \   left child of 7 is also of level 2 but we didnt have space to draw it there
+                                                             4    8      3                                                                         LEVEL 2
+                                                            /\    /\     /\
+                                                           /  \  /  \   /  \
+                                                 /        NA NA  NA NA  NA  NA                                                                     LEVEL 3
+                                           4,8 AND 3 ARE LEAF NODES AS THEY HAVE NO CHILDREN
+
+     EXPLAINING THE TREE :
+     ALL OF THESE 1,9,7,4,8,3 ARE NODES
+     1 IS THE ROOT NODE IT HAS 2 CHILDREN 9 AND 7.
+     THIS MEANS 1 IS THE PARENT NODE OF 9 AND 7. AND 9 AND 7 ARE CHILDREN OF 1
+     ALSO SINCE 9 AND 7 SHARE THE SAME PARENT 1, THEY ARE SIBLINGS
+
+     SIMILARY WE CAN SAY ALL THESE THINGS FOR 9->4,8 AND 7->3(NO SIBLINGS HERE ONLY ONE CHILD)
+
+     4,8 AND 3 HAVE NO CHILDREN SO THEY ARE CALLED LEAF NODES
+
+     TO EXPLAIN ANCESTORS PICK 4 OR 8 AND START TRAVELLING UPWARDS YOU GET 9 AND 1. WE CAN SAY THAT 9 AND 1 ARE ANCESTORS OF 4 OR 8.
+     WE CAN SAY SIBLINGS HAVE THE SAME ANCESTORS
+
+     IN A CONVERSE WAY WE CAN SAY THAT 9 AND 4 AND 8 ARE DECENDANTS OF 1. SO ARE 7 AND 3.
+
+
+   ===================================================================================================================================================================
+   ===================================================================================================================================================================
+
+                                                                       [[ BINARY TREE ]]
+
+
+     BINARY TREE : EVERY NODE HAS <=2 CHILDREN. SO EITHER NO CHILD OR 1 CHILD OR 2 CHILDREN. THE ABOVE EXAMPLE IS A BINARY TREE
+     SO MY NODE WILL LOOK LIKE
+     NODE {
+     int data;
+     int *left;
+     int *right;
+     }
+
+
+   ===================================================================================================================================================================
+   ===================================================================================================================================================================
+
+                                                                      [[ N-NARY TREE ]]
+
+
+     N - NARY TREE : EVERY NODE HAS <=N CHILDREN. SO EITHER NO CHILD OR 1 CHILD OR 2 CHILDREN UPTO N.
+     SO MY NODE WILL LOOK LIKE
+     NODE {
+     int data;
+     vector<node*> child;  //we use an array to store all children
+
+     }
+
+   ===================================================================================================================================================================
+   ===================================================================================================================================================================*//*
+
+                                        BUILDING A TREE AND LEVEL ORDER AND REVERSE LEVEL ORDER  TRAVERSAL                                                          */
+//    node *root = NULL;
+//    1
+//     9
+//     4
+//     -1
+//     -1
+//     8
+//     -1
+//     -1
+//     7
+//     3
+//     -1
+//     -1
+//     -1
+
+
+//    root = buildTree(root);
+//    levelOrderTraversal(root);
+//    //reverse level order traversal
+//    reverseLevelOrderTraversal(root);
+
+/*
+
+===================================================================================================================================================================
+===================================================================================================================================================================*/
+
+/*                                             OTHER TYPES OF TREE TRAVERSALS : INORDER,PREORDER,POSTORDER
+
+        THE IN , PRE AND POST REFER TO THE POSITION OF NODE IN TRAVERSAL THROUGH MAIN NODE N,LEFT NODE L, RIGHT NODE R
+        NOTE : LEFT ALWAYS COVERED BEFORE R EVERYTIME ONLY POSITION OF MAIN NODE CHANGES
+
+        IN    : L-N-R                                        MEANS NODE IN BETWEEN
+        PRE   : N-L-R                                        MEANS NODE BEFORE
+        POST  : R-L-N                                        MEANS NODE AFTER
+
+
+                                                                   1
+                                                                  / \
+                                                                 /   \
+                                                                /     \
+                                                               9       7
+                                                              /\       /
+                                                             /  \     /
+                                                            4    8   3
+
+        for this tree :
+        IN   :  4 9 8 1 3 7
+        PRE  :  1 9 4 8 7 3
+        POST :  4 8 9 3 7 1
+*/
+
+//    inOrderTraversal(root);
+//    cout<<endl;
+//    preOrderTraversal(root);
+//    cout<<endl;
+//    postOrderTraversal(root);
+//    cout<<endl;
+
+
+
+node* root=NULL;
+// 1
+// 9
+// 7
+// 4
+// 8
+// 3
+// -1
+// -1
+// -1
+// -1
+// -1
+// -1
+// -1
+ buildTreeFromLevelOrder(root);
+ levelOrderTraversal(root);
+
+ //iterative in order :
+// stack<node*> st;
+//
+// node* current = root;
+// while( !st.empty())
+// {
+//     //just traverse left side once then keep popping st.top and movinf to its right
+//     while(current!=NULL)
+//     {
+//         st.push(current);
+//         current=current->left;
+//     }
+//     current = st.top();
+//     st.pop();
+//     cout<<current->data<<" ";
+//     current=current->right;
+// }
+
+
+//iterative preorder  :
+//
+//stack<node*> st;
+//node* current = root;
+//while( current!=NULL||!st.empty())
+//{
+//
+//    while(current!=NULL)
+//    {
+//        cout<<current->data<<" ";
+//        st.push(current);
+//        current=current->left;
+//
+//    }
+//
+//    current  =st.top();
+//    st.pop();
+//    current=current->right;
+//
+//}
+
+
+
+//iterative postorder
+
+//stack<node*> st;
+//node* current = root;  //here we need a previous node as well so that we can check whether a node has been travelled or not mainly right ones
+//node* prev= NULL;
+//while(current!=NULL || !st.empty())
+//{
+//    while(current!=NULL)   //traverse as far as possible into the left
+//    {
+//        st.push(current);
+//        current=current->left;
+//    }
+//    while(!st.empty()&&(st.top()->right==NULL ||st.top()->right ==prev )) //check whether right node of stack top is visited or is null
+//    {
+//        cout<<st.top()->data<<endl;    //if yes we have traversed all child nodes so print and pop and also mark that node traversed too
+//        prev = st.top();
+//        st.pop();
+//    }
+//
+//    if(!st.empty())           // if after checking above condition stacknis still not empty it means there are nodes untravelled in the right so travel to them
+//    {
+//        current=st.top()->right;
+//    }
+//
+//}
+//NOTE: PREV COVERS EVERY NODE ONCE IT IS STARTED BEING ALLOCATED
+
+
+
+
+}
