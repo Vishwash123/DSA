@@ -1,0 +1,1382 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+class node{
+public:
+    int data;
+    node* left;
+    node* right;
+
+    node(int d){
+        this->data = d;
+        this->left = NULL;
+        this->right = NULL;
+    }
+
+
+};
+
+//checking sum tree
+//class Solution
+//{
+//    pair<int,bool> check(Node* root)
+//    {
+//        if(root==NULL)
+//        {
+//            return {0,true};
+//        }
+//        if(root->right==NULL&&root->left==NULL)
+//        {
+//            return {root->data,true};
+//        }
+//        if(root->right==NULL)
+//        {
+//            pair<int,bool> l =  check(root->left);
+//            if (root->data==l.first)
+//            {
+//                return {root->data  +l.first,true};
+//            }
+//            return {0,false};
+//
+//        }
+//        if(root->left==NULL)
+//        {
+//            pair<int,bool> r =  check(root->right);
+//            if (root->data==r.first)
+//            {
+//                return {root->data  +r.first,true};
+//            }
+//            return {0,false};
+//        }
+//
+//
+//
+//        pair<int,bool> left= check(root->left);
+//
+//        pair<int,bool> right = check(root->right);
+//        if(!left.second||!right.second)
+//        {
+//            return {0,false};
+//        }
+//
+//        if(root->data == left.first + right.first)
+//        {
+//            return {root->data+left.first + right.first,true};
+//        }
+//        return {0,false};
+//    }
+//
+//public:
+//    bool isSumTree(Node* root)
+//    {
+//        // Your code here
+//
+//        pair<int,bool> p = check(root);
+//        return p.second;
+//
+//    }
+//};
+//checking sum tree ends
+
+
+node* buildTree(node* &root){
+    int data;
+    cout<<"Enter the data : ";
+    cin>>data;
+
+    if(data==-1)
+    {
+        return NULL;
+    }
+    root = new node(data);
+    cout<<"For the left side of "<<data<<endl;
+    root->left  = buildTree(root->left);
+
+
+    cout<<"For the right side of"<<data<<endl;
+    root->right = buildTree(root->right);
+
+
+
+    return root;
+
+
+
+}
+
+
+
+
+
+
+void levelOrderTraversal(node* root){
+
+    queue<node*> q;
+    q.push(root);
+    q.push(NULL);
+
+    while(!q.empty())
+    {
+        node* temp = q.front();
+        q.pop();
+
+        if(temp==NULL)
+        {
+            cout<<endl;
+            if(!q.empty())
+            {
+                q.push(NULL);
+            }
+        }
+        else {
+            cout<<temp->data<<" ";
+
+            if (temp->left != NULL) {
+                q.push(temp->left);
+            }
+
+            if (temp->right != NULL) {
+                q.push(temp->right);
+            }
+
+        }
+    }
+
+}
+
+
+
+void reverseLevelOrderTraversal(node* root){
+    queue<node*> q;
+    stack<node*> st;
+    q.push(root);
+    q.push(NULL);
+
+    while(!q.empty())
+    {
+        node* temp = q.front();
+        q.pop();
+        if (temp == NULL)
+        {
+            st.push(NULL);
+            if(!q.empty())
+            {
+                q.push(NULL);
+            }
+        }
+        else
+        {
+            st.push(temp);
+            if(temp->right!=NULL)
+            {
+                q.push(temp->right);
+            }
+            if(temp->left!=NULL)
+            {
+                q.push(temp->left);
+            }
+
+        }
+    }
+
+    while(!st.empty())
+    {
+        if(st.top()==NULL)
+        {
+            cout<<endl;
+        }
+        else
+        {
+            cout<<st.top()->data<<" ";
+        }
+        st.pop();
+    }
+}
+
+
+
+
+
+
+
+void inOrderTraversal(node* root)
+{
+    if(root==NULL)
+    {
+        return;
+    }
+    inOrderTraversal(root->left);
+    cout<<root->data<<" ";
+    inOrderTraversal(root->right);
+}
+
+
+void preOrderTraversal(node* root)
+{
+    if(root==NULL)
+    {
+        return;
+    }
+    cout<<root->data<<" ";
+    preOrderTraversal(root->left);
+    preOrderTraversal(root->right);
+}
+
+
+void postOrderTraversal(node* root){
+    if(root==NULL)
+    {
+        return;
+    }
+    postOrderTraversal(root->left);
+    postOrderTraversal(root->right);
+    cout<<root->data<< " ";
+}
+
+
+void buildTreeLevelOrder(node* &root)
+{
+    int data;
+    cout<<"Enter root data  :"<<endl;
+    cin>>data;
+    root = new node(data);
+    queue<node*> q;
+    q.push(root);
+
+    while(!q.empty())
+    {
+        node* temp = q.front();
+        q.pop();
+        int leftData;
+        cout<<"Enter left node data for "<<temp->data<<endl;
+        cin>>leftData;
+        if(leftData!=-1)
+        {
+            temp->left = new node(leftData);
+            q.push(temp->left);
+        }
+
+
+        int rightData;
+        cout<<"Enter right node data for "<<temp->data<<endl;
+        cin>>rightData;
+        if(rightData!=-1)
+        {
+            temp->right = new node(rightData);
+            q.push(temp->right);
+        }
+
+
+
+
+    }
+}
+
+
+
+
+
+int height(node* root)
+{
+    if(root==NULL)
+    {
+        return 0;
+    }
+
+    int leftdepth=height(root->left);
+    int rightdepth=height(root->right);
+
+    int maxdepth = max(leftdepth,rightdepth);
+
+    return maxdepth+1; //1 accounting for the node itself
+
+}
+
+
+
+int findDiameter(node* root,int d)
+{
+    if(root==0)
+    {
+        return 0;
+    }
+
+    int lh = findDiameter(root->left,d);
+    int rh = findDiameter(root->right,d);
+
+    d = max(d,lh+rh);
+
+    return max(lh,rh)+1;
+}
+
+
+//balanced tree check/**
+// * Definition for a binary tree node.
+// * struct TreeNode {
+// *     int val;
+// *     TreeNode *left;
+// *     TreeNode *right;
+// *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+// *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+// *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+// * };
+// */
+//class Solution {
+//
+//pair<int,bool> heightFast(TreeNode* root)
+//{
+//    if(root==NULL)
+//    {
+//        return {0,true};
+//    }
+//    pair<int,bool> left = heightFast(root->left);
+//    if(!left.second)
+//    {
+//        return {0,false};
+//    }
+//    pair<int,bool> right = heightFast(root->right);
+//    if(!right.second)
+//    {
+//        return {0,false};
+//    }
+//
+//   pair<int,bool> ret ;
+//   ret.first = max(left.first,right.first)+1;
+//   ret.second = abs(left.first - right.first)<=1;
+//   return ret;
+//}
+//
+//public:
+//    bool isBalanced(TreeNode* root) {
+//
+//          pair<int,bool> p = heightFast(root);
+//          return p.second;
+//
+//
+//        //    bool lb = isBalanced(root->left);
+//        //    bool rb =  isBalanced(root->right);
+//        //    if(!lb || !rb)
+//        //    {
+//        //     return false;
+//        //    }
+//        //    int lh = height(root->left);
+//        //    int rh = height(root->right);
+//        //    if(abs(lh-rh)<=1)
+//        //    {
+//        //     return true;
+//        //    }
+//        //    return false;
+//
+//    }
+//};
+//balanced tree check ends
+
+
+
+
+//identical tree
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+//class Solution {
+//public:
+//    bool isSameTree(TreeNode* p, TreeNode* q) {
+//        if(p==NULL && q==NULL)
+//        {
+//            return true;
+//        }
+//        if(p==NULL||q==NULL)
+//        {
+//            return false;
+//        }
+//
+//
+//        if (!isSameTree(p->left,q->left))
+//        {
+//            return false;
+//        }
+//
+//        if(!isSameTree(p->right,q->right))
+//        {
+//            return false;
+//        }
+//
+//        if(p->val!=q->val)
+//        {
+//            return false;
+//        }
+//        return true;
+//    }
+//};
+//identical tree ends;
+
+
+
+void zigzag(node* root,vector<vector<int>> &res)
+{
+    queue<node*> q;
+    q.push(root);
+    bool leftToRight = true;
+    while(!q.empty())
+    {
+        vector<int> v(q.size());
+
+        for (int i=0;i<v.size();i++)
+        {
+            node* temp = q.front();
+            q.pop();
+
+            if(temp->left)
+            {
+                q.push(temp->left);
+            }
+            if(temp->right)
+            {
+                q.push(temp->right);
+            }
+
+            if(leftToRight)
+            {
+                v[i] = temp->data;
+            }
+            else
+            {
+                v[v.size()-i-1] = temp->data;
+            }
+
+
+        }
+
+        res.push_back(v);
+        leftToRight = !leftToRight;
+
+    }
+}
+
+
+void  TopView(node* root,vector<int> &res)
+{
+    queue<pair<node*,int>> q;
+    map<int,node*> mp;
+
+    q.push({root,0});
+    mp[0]=root;
+
+    while(!q.empty())
+    {
+        node* temp = q.front().first;
+        int horizontalDistance = q.front().second;
+
+        if(mp.find(horizontalDistance)==mp.end())
+        {
+            mp[horizontalDistance]=temp;
+        }
+
+        if(temp->left)
+        {
+            q.push({temp->left,horizontalDistance-1});
+        }
+        if(temp->right)
+        {
+            q.push({temp->right,horizontalDistance+1});
+        }
+    }
+
+
+    for (auto x:mp)
+    {
+        res.push_back(x.second->data);
+    }
+
+
+}
+
+
+
+vector<int> bottomView(node* root)
+{
+    vector<int> res;
+    queue<pair<node*,int>> q;
+    map<int,node*> mp;
+
+    q.push({root,0});
+    mp[0]=root;
+
+    while(!q.empty())
+    {
+        node* temp = q.front().first;
+        int horizontalDistance = q.front().second;
+
+        mp[horizontalDistance]=temp;
+
+
+        if(temp->left)
+        {
+            q.push({temp->left,horizontalDistance-1});
+        }
+        if(temp->right)
+        {
+            q.push({temp->right,horizontalDistance+1});
+        }
+    }
+
+
+    for (auto x:mp)
+    {
+        res.push_back(x.second->data);
+    }
+    return res;
+}
+
+
+
+
+
+
+vector<int> leftView(node* root)
+{
+    vector<int> res;
+    if(root==NULL)
+    {
+        return res;
+    }
+
+    queue<pair<node* , int>> q;
+    map<int,node*> mp;
+
+    q.push({root,0});
+    mp[0]=root;
+
+    while(!q.empty())
+    {
+        node* temp = q.front().first;
+        int vd = q.front().second;
+        q.pop();
+
+        if(mp.find(vd)==mp.end())
+        {
+            mp[vd]=temp;
+        }
+
+        if(temp->left)
+        {
+            q.push({temp->left,vd+1});
+        }
+        if(temp->right)
+        {
+            q.push({temp->right,vd+1});
+        }
+    }
+
+
+    for (auto x:mp)
+    {
+        res.push_back(x.second->data);
+    }
+
+
+
+    return res;
+}
+
+
+vector<int> rightView(node* root)
+{
+    vector<int> res;
+    if(root==NULL)
+    {
+        return res;
+    }
+
+    queue<pair<node* , int>> q;
+    map<int,node*> mp;
+
+    q.push({root,0});
+    mp[0]=root;
+
+    while(!q.empty())
+    {
+        node* temp = q.front().first;
+        int vd = q.front().second;
+        q.pop();
+
+        if(mp.find(vd)==mp.end())
+        {
+            mp[vd]=temp;
+        }
+
+        if(temp->right)
+        {
+            q.push({temp->right,vd+1});
+        }
+
+        if(temp->left)
+        {
+            q.push({temp->left,vd+1});
+        }
+
+    }
+
+
+    for (auto x:mp)
+    {
+        res.push_back(x.second->data);
+    }
+
+
+
+    return res;
+}
+
+
+
+
+
+
+class Solution {
+public:
+    vector<vector<int>> verticalTraversal(node* root) {
+        vector<vector<int>> res;
+        if(root==NULL)
+        {
+            return res;
+        }
+        queue<pair<node*,pair<int,int>>> q;
+        map<int,vector<pair<int,int>>> mp;
+        q.push({root,{0,0}});
+
+
+        while(!q.empty())
+        {
+            node* temp = q.front().first;
+            int hd = q.front().second.second;
+            int vd = q.front().second.first;
+
+            q.pop();
+
+
+            if(mp.find(hd)!=mp.end() && mp[hd].back().first==vd)
+            {
+                if(temp->data<mp[hd].back().second)
+                {
+                    vector<pair<int,int>> store;
+                    while(!mp[hd].empty() && temp->data<mp[hd].back().second && vd== mp[hd].back().first)
+                    {
+                        pair<int,int> p = mp[hd].back();
+                        store.push_back(p);
+                        mp[hd].pop_back() ;
+
+
+                    }
+                    mp[hd].push_back({vd,temp->data});
+                    mp[hd].insert(mp[hd].end(),store.rbegin(),store.rend());
+                }
+                else
+                {
+                    mp[hd].push_back({vd,temp->data});
+                }
+            }
+            else
+            {
+
+                mp[hd].push_back({vd,temp->data});
+
+            }
+
+            if(temp->left)
+            {
+                q.push({temp->left,{vd+1,hd-1}});
+
+            }
+            if(temp->right)
+            {
+                q.push({temp->right,{vd+1,hd+1}});
+            }
+        }
+
+        for (auto x:mp)
+        {
+            vector<int> temp;
+            for (auto y:x.second)
+            {
+                temp.push_back(y.second);
+            }
+            res.push_back(temp);
+
+        }
+
+
+
+
+        return res;
+    }
+};
+
+
+
+
+void longestBloodlineSum(node* node,int &maxSum,int &maxVD,int vd,int sum)
+{
+    if(node==NULL)
+    {
+        return;
+
+    }
+
+    if(!node->left)
+    {
+        if(node->right)
+        {
+            longestBloodlineSum(node->right,maxSum,maxVD,vd+1,sum+node->data);
+        }
+        else
+        {
+            vd+=1;
+            sum+=node->data;
+            if(vd>maxVD)
+            {
+                maxSum=sum;
+                maxVD=vd;
+            }
+            else if(vd==maxVD)
+            {
+                maxSum=max(maxSum,sum);
+            }
+            return;
+        }
+    }
+    if(!node->right)
+    {
+        if(node->left)
+        {
+            longestBloodlineSum(node->left,maxSum,maxVD,vd+1,sum+node->data);
+        }
+        else
+        {
+            vd+=1;
+            sum+=node->data;
+            if(vd>maxVD)
+            {
+                maxSum=sum;
+                maxVD=vd;
+            }
+            else if(vd==maxVD)
+            {
+                maxSum=max(maxSum,sum);
+            }
+            return;
+        }
+    }
+
+    longestBloodlineSum(node->left,maxSum,maxVD,vd+1,sum+node->data);
+    longestBloodlineSum(node->right,maxSum,maxVD,vd+1,sum+node->data);
+
+}
+
+
+
+node* leastCommonAncestor(node* root,node* p,node* q)
+{
+    if(!root || root==q||root==q)   //if root is null or equal to q or equal to p i.e root is either null or we find one of the nodes
+    {                               //then we return root because we have to return null in case root==null.
+        return root;                //and p if root==p and q if root == q.
+                                    //in all cases root is equyal to the value we want tot return so just return root and compike this into one condition
+    }
+
+    node* l = leastCommonAncestor(root->left,p,q); //left side call
+    node* r = leastCommonAncestor(root->right,p,q);//right side call
+
+    if(l&&r)  //if both l and r are not null means we found both l and r and so our root node is the LCA
+    {
+        return root;
+    }
+    // if either of l or right are null :
+    return l?l:r;  //this line will return left if left exists and right if right does and if neither exists it return NULL;
+}
+
+
+
+void allpathswithsumK(node* root,int k,int &res,long long sum,map<long long,int> &mp)
+{
+    //NOTE : ADD MP[0]++ IN MAIN FUNCTION BEFORE CALLING THIS FUNCTION IT IS AN EDGE CASE N CASE SUM-K ==0
+    if(!root)
+    {
+        return;
+    }
+    sum+=root->data;
+    if(mp.find(sum-k)!=mp.end())
+    {
+        res+=mp[sum-k];
+    }
+    mp[sum]++;
+
+    allpathswithsumK(root->left,k,res,sum,mp);
+    allpathswithsumK(root->right,k,res,sum,mp);
+    mp[sum]--;
+
+
+//}
+//
+//
+//void kthAncestor(node* root,int k,int node)
+//{
+//    //one approach is find the path where the node lies and return kth node from last
+//    //other is used BFS
+//
+//    queue<node*> q;
+//    map<int,int> mp; //make a map to store values of nodes and theior ancestors
+//    q.push(root);
+//    mp[root->data]=0;
+//    while(!q.empty())
+//    {
+//        node* temp = q.front();
+//        q.pop();
+//        if(temp->left)
+//        {
+//            q.push(temp->left);
+//            mp[temp->left->data] = temp->data; //store nndoe value and ancestor value
+//
+//        }
+//
+//        if(temp->right)
+//        {
+//            q.push(temp->right)
+//            {
+//                mp[temp->right->data]=temp->data;
+//            }
+//        }
+//
+//    }
+//
+//    int ans = node;  //make a variable and inintialize it to node
+////now we are on the node so through mp[ans] we can access its ancestor
+////ans = mp[ans] means that now ans travels to its ancestor so we travel it k times
+////so in the loop we either travel it k times or ans=0 before we can travel in this case we return -1;
+//    while(k>0 &&mp[ans]!=0)
+//    {
+//        ans = mp[ans];
+//        k--;
+//    }
+//
+//    return k==0?ans:-1;
+//}
+//
+//
+//
+//pair<int,int> maximumNonAdjacentSum(node* root){
+//    if(!root)
+//    {
+//        return {0,0};
+//    }
+//
+//    //basically you go both sides until null and return 0,0 left one is if you include the current node and right one is if you exclude
+//
+//    pair<int,int> p1 =  maximumNonAdjacentSum(root->left);
+//    pair<int,int> p2 = maximumNonAdjacentSum(root->right);
+//
+//    return {root->data+p1.second+p2.second,max(p1.first,p1.second)+max(p2.first,p2.second)};
+//    //think of the root node
+//    //if you include it then you cant take either of immediate left or right nodes.
+//    //so you have ot tkae both their excluded sums and thr root data to get icnludsive sum of root node
+//    //for the exluded sum if we exclude root we can take both left and right nodes
+//    //BUT there are 4 CHOICES we can either take immediate left inclusive sum or immediate left excluded sum same for right side
+//    //since we want maximum we take maximum sum on both sides and return the pair.
+//
+//}
+
+//make tree form in order and pre order
+// same form inorder snd postorder
+//minimum time to burn binary tree
+
+
+
+
+int main() {
+
+    node* root = NULL;
+//    1
+//    9
+//    4
+//    -1
+//    -1
+//    8
+//    -1
+//    -1
+//    7
+//    3
+//    -1
+//    -1
+//    -1
+
+
+/*
+ *
+ *                                           1
+ *                                          / \
+ *                                         /   \
+ *                                        /     \
+ *                                       9       7
+ *                                      /\       /
+ *                                     /  \     /
+ *                                    /    \   /
+ *                                    4    8   3
+ *
+ *
+// * */
+//    root  = buildTree(root);
+//    levelOrderTraversal(root);
+//    reverseLevelOrderTraversal(root);
+//    cout<<endl;
+//    inOrderTraversal(root);
+//    cout<<endl;
+//    preOrderTraversal(root);
+//    cout<<endl;
+//    postOrderTraversal(root);
+//
+//
+//1
+//9
+//7
+//4
+//8
+//3
+//-1
+//-1
+//-1
+//-1
+//-1
+//-1
+//-1
+    buildTreeLevelOrder(root);
+    levelOrderTraversal(root);
+
+    //iterative inorder :
+
+//    cout<<endl<<"inorder : "<<endl;
+//    stack<node*> st;
+//    node* current = root;
+//    while(current!=NULL || !st.empty())
+//    {
+//        while(current!=NULL)
+//        {
+//            st.push(current);
+//            current = current->left;
+//        }
+//
+//        current  = st.top();
+//        st.pop();
+//        cout<<current->data<<" ";
+//        current=current->right;
+//    }
+//
+//
+//
+//    cout<<endl<<"preorder : "<<endl;
+//
+//    stack<node*> st2;
+//    node* curr2 = root;
+//    st2.push(curr2);
+//    while(!st2.empty())
+//    {
+//        node* temp = st2.top();
+//        st2.pop();
+//        cout<<temp->data<<" ";
+//
+//        if(temp->right)
+//        {
+//            st2.push(temp->right);
+//        }
+//        if(temp->left) {
+//            st2.push(temp->left);
+//        }
+//
+//    }
+////
+//    cout<<endl<<"postorder : "<<endl;
+//
+//    stack<node*> st3;
+//    node* curr3 = root;
+//    node* prev = NULL;
+//
+//    while(curr3!=NULL ||!st3.empty())
+//    {
+//        while(curr3!=NULL)
+//        {
+//            st3.push(curr3);
+//            curr3=curr3->left;
+//        }
+//
+//        while(!st3.empty() &&  (st3.top()->right==NULL|| st3.top()->right==prev))
+//        {
+//            cout<<st3.top()->data<<" ";
+//            prev=st3.top();
+//            st3.pop();
+//        }
+//
+//        if(!st3.empty())
+//        {
+//            curr3=st3.top()->right;
+//        }
+//
+//
+//    }
+
+
+
+    //height of the binary tree;
+    //basically max of length between left and right subtree
+    //add +1 at every node
+
+//   cout<< height(root);
+
+
+        //diameter  : longest path b/w any two nodes
+        //diameter = ongest leftheight + longest right height
+        //so find left height and right height add them to get diameter of every node keep a value for comparison is parameter '
+        //change it when you get bigger value
+
+        //return value foes to lh and right height
+        //so basically in we want longest height on left side or right side we return longest height between lh & rh +1 for the node
+
+
+        //GYST : DIAMETER =  longest path b/w any two nodes
+        //SO HYPOTHETICALLY IN A COMPLETE TREE SAY LONGEST PATH SHOULD BE BETWEEN LEFTMOST NODE & RIGHTMOST NODE
+        // IT IS BASICALLY LONGEST PATH ON LEFT AND LONGEST PATH ON RIGHT
+        // WHAT IS HEIGHT? LONGEST PATH FROM ROOT TO BOTTOM
+        // IF WE FIND LEFT TREE HEIGHT = WE FIND LONGEST LEFT PATH
+        // IF WE FIND RIGHT TREE HEIGHT = WE FIND LONGEST RIGHT PATH
+        // AND DIAMETER  = LH + RH;
+
+
+        //BUT HERE TREE MAY OR MAY NOT BE COMPLETE SO WE NEED TO KEEP COMPARING DIAMETER AS IT MAY INCREASE OR DECREASE AT A SIDE
+
+//        int diameter=0;
+//        findDiameter(root,diameter);
+//
+//        cout<<diameter<<endl;
+
+
+
+
+//MORRIS TRAVERSAL :
+//we create temporary links to traverse tree using constant space
+//we keep a predecessor node and a current node
+//node* pre,* curr;
+//curr= root;
+//while(curr!=nullptr)
+//{
+//    if(curr->left==NULL)  //at every curr nnode check if its left node is null or not
+//        //if yes then theres nothing on the left so oprint current node and move to the right
+//    {
+//       cout<<curr->data<<" ";
+//       curr=curr->right;
+//    }
+//    else  //if left exists make start predecessor at this left node and find its right most predecessor
+//    //i.e. its right node is NULL. and then link its right node to current node.
+//    //then after linking move to the left.
+//    //and repeat
+//    //we have written the loop in such a way that it will keep repeating until we reach the leftmost node and upon reaching it:
+//    // above condtion runs and we move to the right;
+//    // and then same traversal happens again
+//
+//    //now when we do reach one of these predecessor linked nodes once again we remove them.NOTE: THIS WILL ONLY HAPPEN ONCE THE ENTIRE SUBTREE IBN WHIHC THAT
+//    //PREDECESSOR NODE WAS RIGHT MOST IS ALREADY TRAVERSED AND WE GO BACK TO ITS ROOT NODE AND IN THIS CASE WE BREAK THE LINK , PRINT CURR AND MOVE TO THE RIGHT
+//    {
+//        //find predecessor of the left side node of curr
+//        pre = curr->left;
+//        while(pre->right!=NULL && pre->right!=curr)
+//        {
+//            pre=pre->right;
+//        }
+//
+//        if(pre->right==NULL)
+//        {
+//            pre->right=curr;
+//            curr=curr->left;
+//        }
+//
+//        else
+//        {
+//            pre->right=NULL;
+//            cout<<curr->data<<" ";
+//            curr=curr->right;
+//
+//        }
+//    }
+//}
+
+
+node* curr=root;
+node* prev=NULL;
+
+while(curr!=NULL)
+{
+    if(!curr->left)
+    {
+        cout<<curr->data<<" ";
+        curr=curr->right;
+    }
+    else
+    {
+        prev=curr->left;
+        while(prev->right!=NULL || prev->right!=curr)
+        {
+            prev=prev->right;
+        }
+
+        if(prev->right==NULL)
+        {
+            prev->right=curr;
+        }
+        if(prev->right==curr)
+        {
+            cout<<curr->data<<" ";
+            prev->right=NULL;
+            curr=curr->right;
+        }
+
+    }
+}
+
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//BOUNDARY TRAVERSAL;
+////{ Driver Code Starts
+//#include <bits/stdc++.h>
+//using namespace std;
+//#define MAX_HEIGHT 100000
+//
+//// Tree Node
+//struct Node
+//{
+//    int data;
+//    Node* left;
+//    Node* right;
+//};
+//
+//// Utility function to create a new Tree Node
+//Node* newNode(int val)
+//{
+//    Node* temp = new Node;
+//    temp->data = val;
+//    temp->left = NULL;
+//    temp->right = NULL;
+//
+//    return temp;
+//}
+//
+//
+////// Function to Build Tree
+////Node* buildTree(string str)
+////{
+////    // Corner Case
+////    if(str.length() == 0 || str[0] == 'N')
+////        return NULL;
+////
+////    // Creating vector of strings from input
+////    // string after spliting by space
+////    vector<string> ip;
+////
+////    istringstream iss(str);
+////    for(string str; iss >> str; )
+////        ip.push_back(str);
+////
+////    // Create the root of the tree
+////    Node* root = newNode(stoi(ip[0]));
+////
+////    // Push the root to the queue
+////    queue<Node*> queue;
+////    queue.push(root);
+////
+////    // Starting from the second element
+//    int i = 1;
+//    while(!queue.empty() && i < ip.size()) {
+//
+//        // Get and remove the front of the queue
+//        Node* currNode = queue.front();
+//        queue.pop();
+//
+//        // Get the current node's value from the string
+//        string currVal = ip[i];
+//
+//        // If the left child is not null
+//        if(currVal != "N") {
+//
+//            // Create the left child for the current node
+//            currNode->left = newNode(stoi(currVal));
+//
+//            // Push it to the queue
+//            queue.push(currNode->left);
+//        }
+//
+//        // For the right child
+//        i++;
+//        if(i >= ip.size())
+//            break;
+//        currVal = ip[i];
+//
+//        // If the right child is not null
+//        if(currVal != "N") {
+//
+//            // Create the right child for the current node
+//            currNode->right = newNode(stoi(currVal));
+//
+//            // Push it to the queue
+//            queue.push(currNode->right);
+//        }
+//        i++;
+//    }
+//
+//    return root;
+//}
+
+
+
+
+
+//
+//
+//
+//
+//// } Driver Code Ends
+///* A binary tree Node
+//struct Node
+//{
+//    int data;
+//    Node* left, * right;
+//}; */
+//
+//class Solution {
+//public:
+//
+//    void leftBoundary(Node* node,vector<int> &v)
+//    {
+//        while(node && (node->left || node->right))
+//        {
+//            v.push_back(node->data);
+//
+//
+//            if(!node->left&&node->right)
+//            {
+//
+//                node=node->right;
+//            }
+//            else
+//            {
+//                node=node->left;
+//            }
+//        }
+//
+//    }
+//
+//
+//    void rightBoundary(Node* node,vector<int> &v)
+//    {
+//        if(!node)
+//        {
+//            return;
+//
+//        }
+//
+//        if(!node->right)
+//        {
+//            if(node->left)
+//            {
+//                rightBoundary(node->left,v);
+//                v.push_back(node->data);
+//                return;
+//            }
+//            else
+//            {
+//                return;
+//            }
+//        }
+//
+//        rightBoundary(node->right,v);
+//        v.push_back(node->data);
+//
+//
+//    }
+//
+//
+//
+//    void leafNodes(Node* node,vector<int> &v)
+//    {
+//        if(!node)
+//        {
+//            return;
+//        }
+//        if(!node->left && !node->right)
+//        {
+//            v.push_back(node->data);
+//            return;
+//        }
+//
+//        leafNodes(node->left,v);
+//        leafNodes(node->right,v);
+//        return;
+//    }
+//
+//
+//
+//    vector <int> boundary(Node *root)
+//    {
+//        //Your code here
+//        vector<int> res;
+//        if(!root)
+//        {
+//            return res;
+//        }
+//        res.push_back(root->data);
+//        if(root->left==NULL&&root->right==NULL){
+//            return res;
+//        }
+//
+//        if(root->left!=NULL)
+//            leftBoundary(root->left,res);
+//
+//
+//        leafNodes(root,res);
+//
+//        if(root->right!=NULL)
+//            rightBoundary(root->right,res);
+//        return res;
+//    }
+//};
+//
+////{ Driver Code Starts.
+//
+///* Driver program to test size function*/
+//
+//int main() {
+//    int t;
+//    string tc;
+//    getline(cin, tc);
+//    t=stoi(tc);
+//    while(t--)
+//    {
+//        string s ,ch;
+//        getline(cin, s);
+//        Node* root = buildTree(s);
+//        Solution ob;
+//        vector <int> res = ob.boundary(root);
+//        for (int i : res) cout << i << " ";
+//        cout << endl;
+//    }
+//    return 0;
+//}
+//// } Driver Code Ends
+
+
+
+
