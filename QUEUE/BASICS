@@ -1,0 +1,592 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+//USING ARRAYS :
+//class Queue{
+//
+//    int *arr;
+//    int front;
+//    int rear;
+//    int size;
+//public:
+//    Queue(int size){
+//        this->size  = size;
+//        this->front = 0;
+//        this->rear = 0;
+//        arr = new int[size];
+//    }
+//
+//
+//    void push(int d)
+//    {
+//        if (rear == size)
+//        {
+//            cout<<"Queue already full"<<endl;
+//            return;
+//        }
+//        else
+//        {
+//            arr[rear] = d;
+//            rear++;
+//        }
+//    }
+//
+//    void pop()
+//    {
+//         if (front == rear)
+//           {
+//               cout<<"queue is empty"<<endl;
+//           }
+//        arr[front] = -1;
+//        front++;
+//        if (front == rear)
+//        {
+//            front = 0;
+//            rear = 0;
+//        }
+//        return;
+//
+//    }
+//
+//    void isEmpty()
+//    {
+//        if (front == rear)
+//        {
+//            cout<<"Queue is empty"<<endl;
+//        }
+//        else
+//        {
+//            cout<<"Queue is not empty"<<endl;
+//        }
+//    }
+//
+//    void Front(){
+//
+//        if (front == rear)
+//        {
+//            cout<<"Queue is empty. No front element"<<endl;
+//            return ;
+//        }
+//
+//         cout<<"Front element is : "<< arr[front]<<endl;
+//
+//    }
+//
+//
+//    void back(){
+//        if (front == rear)
+//        {
+//            cout<<"Queue is empty. No rear element"<<endl;
+//            return ;
+//        }
+//
+//        cout<<"Rear element is : "<<arr[rear-1]<<endl;
+//    }
+//};
+
+//class CircularQueue{
+//public:
+//    // Initialize your data structure.
+//    int *arr;
+//    int size;
+//    int front;
+//    int rear;
+//    CircularQueue(int n){
+//        // Write your code here.
+//        this->size = n;
+//        arr = new int[n];
+//        front =-1;
+//        rear=-1;
+//    }
+//
+//    // Enqueues 'X' into the queue. Returns true if it gets pushed into the stack, and false otherwise.
+//    bool enqueue(int value){
+//        // Write your code here.
+//        if (front == -1)
+//        {
+//            front = 0 , rear =0;
+//            arr[rear] = value;
+//            return true;
+//        }
+//        else if (front == 0 && rear == size-1)
+//        {
+//            return false;
+//        }
+//        else if (rear == size -1 && front!=0)
+//        {
+//            rear=0;
+//            arr[rear]=value;
+//            return true;
+//        }
+//        else if (front != 0 && rear == (front - 1)%(size-1))
+//        {
+//            return false;
+//        }
+//
+//        else
+//        {
+//            rear++;
+//            arr[rear] = value;
+//            return true;
+//        }
+//    }
+//
+//    // Dequeues top element from queue. Returns -1 if the stack is empty, otherwise returns the popped element.
+//    int dequeue(){
+//        // Write your code here.
+//        if(front == -1 && rear == -1)
+//        {
+//            return -1;
+//        }
+//        if (front==rear)
+//        {
+//            int x = arr[front];
+//            arr[front]=-1;
+//            front=-1;
+//            rear=-1;
+//            return x;
+//        }
+//
+//        if(front == size-1)
+//        {
+//            int x = arr[front];
+//            arr[front]=-1;
+//            front = 0;
+//            return x;
+//        }
+//        int x = arr[front];
+//        arr[front]=-1;
+//
+//        front++;
+//
+//
+//        return x;
+//    }
+//};
+
+
+
+
+
+#include <bits/stdc++.h>
+class Deque
+{
+public:
+    // Initialize your data structure.
+    int *arr;
+    int front;
+    int rear;
+    int size;
+    Deque(int n)
+    {
+        // Write your code here.
+        this->size = n;
+        arr= new int[size];
+        front=-1,rear=-1;
+
+    }
+
+    // Pushes 'X' in the front of the deque. Returns true if it gets pushed into the deque, and false otherwise.
+    bool pushFront(int x)
+    {
+        // Write your code here.
+
+        if (front == 0 && rear==size-1 )
+        {
+            return false;
+        }
+        else if ( rear!=front && rear == (front-1)%(size-1))
+        {
+            return false;
+        }
+        else if (front == -1)
+        {
+            front = rear = 0;
+            arr[front] = x;
+            return true;
+        }
+        else if (front == 0 && rear!=size-1 )
+        {
+            front = size - 1;
+            arr[front]  = x;
+            return true;
+        }
+        else
+        {
+            front--;
+            arr[front] = x;
+            return true;
+        }
+    }
+
+    // Pushes 'X' in the back of the deque. Returns true if it gets pushed into the deque, and false otherwise.
+    bool pushRear(int x)
+    {
+        // Write your code here
+
+        if (rear == -1)
+        {
+            front =rear = 0;
+            arr[rear] = x;
+            return true;
+        }
+        else if (front !=0 && rear==size-1)
+        {
+            rear=0;
+            arr[rear]=x;
+            return true;
+        }
+        else if ( front ==0 && rear==size-1 || (rear!=front && rear == (front-1)%(size-1)))
+        {
+
+            return false;
+        }
+
+        else{
+            rear++;
+            arr[rear] = x;
+            return true;
+        }
+
+    }
+
+    // Pops an element from the front of the deque. Returns -1 if the deque is empty, otherwise returns the popped element.
+    int popFront()
+    {
+        // Write your code here.
+        if (front == -1)
+        {
+            return -1;
+        }
+        if (front==rear)
+        {
+            int x = arr[front];
+            arr[front]=-1;
+            front = rear = -1;
+            return x;
+
+        }
+        if (front == size-1)
+        {
+            int x = arr[front];
+            arr[front]=-1;
+            front = 0;
+            return x;
+        }
+        else
+        {
+            int x = arr[front];
+            arr[front]=-1;
+            front++;
+            return x;
+        }
+    }
+
+    // Pops an element from the back of the deque. Returns -1 if the deque is empty, otherwise returns the popped element.
+    int popRear()
+    {
+        // Write your code here.
+        if (rear==-1)
+        {
+            return -1;
+        }
+        if (front!=0 && rear==0)
+        {
+            int x=arr[rear];
+            arr[rear]=-1;
+            rear = size-1;
+            return x;
+
+        }
+        if (front==rear)
+        {
+            int x = arr[rear];
+            arr[rear]= -1;
+            front = rear = -1;
+            return x;
+
+        }
+        else
+        {
+            int x = arr[rear];
+            arr[rear]=-1;
+            rear--;
+            return x;
+        }
+    }
+
+    // Returns the first element of the deque. If the deque is empty, it returns -1.
+    int getFront()
+    {
+        // Write your code here.
+        if (front == -1)
+        {
+            return -1;
+        }
+        else
+        {
+            return arr[front];
+        }
+    }
+
+    // Returns the last element of the deque. If the deque is empty, it returns -1.
+    int getRear()
+    {
+        // Write your code here.
+        if (rear==-1)
+        {
+            return -1;
+        }
+        else
+        {
+            return arr[rear];
+        }
+    }
+
+    // Returns true if the deque is empty. Otherwise returns false.
+    bool isEmpty()
+    {
+        // Write your code here.
+        if(front==-1 && rear ==-1)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    // Returns true if the deque is full. Otherwise returns false.
+    bool isFull()
+    {
+        // Write your code here.
+        if (front ==0 && rear==size-1)
+        {
+            return true;
+        }
+        else if ( rear == (front-1)%(size-1))
+        {
+            return true;
+        }
+        return false;
+    }
+};
+//USING LINKED LISTS :
+class Node{
+public:
+
+    int data;
+    Node* next;
+
+    Node(int d)
+    {
+        this->data = d;
+        this->next = NULL;
+    }
+
+    Node()
+    {
+        this->next = NULL;
+
+    }
+};
+
+
+
+class Queue{
+    Node* front;
+
+    Node* rear;
+    int size;
+    int maxSize;
+public:
+    Queue(int sizer)
+    {
+        this->maxSize = sizer;
+        size = 0;
+        front = NULL;
+        rear = NULL;
+
+    }
+
+    void push(int d)
+    {
+        if (size==maxSize)
+        {
+            cout<<"Queue already full"<<endl;
+            return;
+        }
+        else
+        {
+            cout<<"pushing in : "<<d<<endl;
+            Node* temp = new Node(d);
+            if (front == NULL && rear == NULL)
+            {
+                front=temp;
+                rear=temp;
+
+                size++;
+                return;
+            }
+            else
+            {
+                rear->next=temp;
+
+                rear=temp;
+                size++;
+
+
+
+            }
+        }
+    }
+
+
+    void pop()
+    {
+        if (front == NULL && rear == NULL)
+        {
+            cout<<"Queue empty"<<endl;
+            return;
+        }
+        else
+        {
+            cout<<"popping : "<<front->data<<endl;
+            if(front == rear)
+            {
+                front = NULL;
+                rear = NULL;
+                size = 0;
+            }
+            else
+            {
+                front = front->next;
+                size--;
+            }
+
+
+
+
+        }
+    }
+
+
+    void isEmpty(){
+        if (front == NULL && rear == NULL)
+        {
+            cout<<"Yes queue is empty"<<endl;
+        }
+        else
+        {
+            cout<<"No queue is not empty"<<endl;
+        }
+    }
+
+
+    void Front(){
+        if (front == NULL && rear == NULL)
+        {
+            cout<<"Queue is empty. No front element"<<endl;
+            return;
+        }
+
+        cout<<"Front element is : "<<front->data<<endl;
+    }
+
+
+    void back()
+    {
+        if (front == NULL && rear == NULL)
+        {
+            cout<<"Queue is empty. No rear element"<<endl;
+            return;
+        }
+
+        cout<<"Rear element is : "<<rear->data<<endl;
+
+    }
+
+
+
+};
+
+
+
+
+int main() {
+
+/*
+ ====================================================================================================================================================================================
+ ====================================================================================================================================================================================*/
+
+                                                                    //USING STL :
+
+    //QUEUE :  IT IS A DS WHICH FOLLOWS FIFO
+
+//    queue<int> q;
+//    q.push(1);
+//    q.push(2);
+//    q.push(3);
+//
+//    cout<<q.front()<<endl;
+//    cout<<q.back()<<endl;
+//
+//    cout<<q.size()<<endl;
+//
+//
+//    q.pop();
+//
+//    cout<<q.front()<<endl;
+//    cout<<q.back()<<endl;
+//
+//    cout<<q.size()<<endl;
+
+/*
+ ====================================================================================================================================================================================
+ ====================================================================================================================================================================================*/
+
+//
+//    Queue q(5);
+//    q.isEmpty();
+//    q.Front();
+//    q.back();
+//
+//    q.push(1);
+//    q.isEmpty();
+//    q.Front();
+//    q.back();
+//
+//    q.push(2);
+//    q.isEmpty();
+//    q.Front();
+//    q.back();
+//
+//    q.push(3);
+//    q.isEmpty();
+//    q.Front();
+//    q.back();
+//
+//    q.pop();
+//    q.isEmpty();
+//    q.Front();
+//    q.back();
+//
+//    q.pop();
+//    q.isEmpty();
+//    q.Front();
+//    q.back();
+//
+//    q.pop();
+//    q.isEmpty();
+//    q.Front();
+//    q.back();
+//
+//
+//    for (int i=0;i<=7;i++)
+//    {
+//        q.push(i);
+//    }
+//
+//    q.Front();
+//    q.back();
+
+
+}
