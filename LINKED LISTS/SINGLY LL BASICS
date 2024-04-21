@@ -1,0 +1,434 @@
+#include <iostream>
+#include<bits/stdc++.h>
+using namespace std;
+
+
+
+class Node{
+public:
+   int data;
+    Node* next;
+
+    //CONSTRUCTOR
+    Node(int data){
+        this->data=data;
+        this->next=NULL;
+    }
+
+    ~Node(){
+        int value=this->data;
+        if (this->next!=NULL)
+        {
+
+            delete next;//freeing memory
+            this -> next = NULL;
+
+            cout<<"memory is free for node with data "<<value<<endl;
+        }
+    }
+
+
+
+};
+
+
+
+
+
+
+
+
+
+
+//INSERT AT HEAD
+void InsertAtHead(Node * &head,int d){//why the reference becuase we dont wanna make a copy
+    //new node create
+    Node *temp=new Node(d);
+    temp->next=head; //this head is the address of the first node we make the next pointerof the new node point to it
+    head=temp;//we change the address in head to the new node
+}
+
+
+
+//INSERT AT TAIL
+void insertAttail(Node *&tail,int d){
+
+    Node*temp=new Node(d);
+    tail->next=temp;
+    //temp->next=NULL; //No nedd to change the address of the next node it automatically is set to null due to the constructor
+    tail=temp;
+
+
+}
+
+
+
+//INSERT AT POSITION
+void insertAtPosition(Node*&head,Node*&tail,int position,int d){
+
+    //edge case :  we always need a previus node to insert at any position and there is no node before head so we need the functioonality of insert at head
+    //for tail insertion it will work because we do have a previous node in that case BUT THERE IS AN ISSUE THAT TAIL DOESNT GET UPDATED
+    if (position==1)
+    {
+        InsertAtHead(head,d);
+        return; //return so that the below code isnt executed;
+    }
+
+
+
+
+
+    Node *temp=head;//creating a temporary node indicator to traverse upto to position -1 node to access the addresses we need to insert
+    int cnt=1;
+    while(cnt<position-1)
+    {
+        temp=temp->next;
+        cnt++;
+    }//looping and moving to next node until we reach position -1
+
+    if(temp->next==NULL)
+    {
+        insertAttail(tail,d);
+        return;
+
+    }
+
+    Node* NodeToInsert=new Node(d);//creating new node to insert
+    NodeToInsert->next=temp->next;//storing the address of next node in our new node
+    temp->next=NodeToInsert; //storing the address of new node in the prebious node and hence finishing the insertion
+    // SINCE IT IS A POINTER THE ACTUAL POINTER IN THE NODE WILL CHANGE temp basically points to the same location as the position-1
+    //node does if we make change to temp change will be made to position -1 node as well;
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+void print(Node * &head)
+{
+    cout<<"printing : "<<endl;
+    Node *temp=head;//temporary pointer to traverse LL
+    while(temp!=NULL)
+    {
+        cout<<temp->data<<endl;
+        temp=temp->next;//changing address of temp to next pointer to ove the pointer to next address;
+    }
+}
+
+
+
+
+void deleteNode(Node*&head,Node*&tail,int position)
+{
+    if (position == 1)
+    {
+        Node *temp=head;
+        head=temp->next;
+        temp->next=NULL;
+        delete temp;
+
+    }
+
+    else
+    {
+        Node*curr=head;
+        Node*prev=NULL;
+        int cnt=1;
+        while (cnt<position)
+        {
+            prev=curr;
+            curr=curr->next;
+            cnt++;
+
+        }
+
+        if (curr->next==NULL)
+        {
+            tail=prev;
+
+        }
+
+        prev->next=curr->next;
+        curr->next=NULL;
+        delete curr;
+
+    }
+}
+
+
+
+
+
+void merge(Node* head,Node*tail)
+{
+    Node*temp=head;
+    int len=1;
+    Node*prev=head;
+    while(temp!=tail)
+    {
+        prev=temp;
+        temp=temp->next;
+        len++;
+
+
+    }
+    int cnt=1;
+    Node*mid=head;
+    while(cnt<len/2)
+    {
+        mid=mid->next;
+        cnt++;
+    }
+
+    vector<int> ar1;
+    vector<int> ar2;
+    Node* help1=head;
+    while(help1->next!=mid)
+    {
+        ar1.push_back(help1->data);
+        help1=help1->next;
+    }
+
+    Node* help2=mid->next;
+    while(help2->next!=NULL)
+    {
+        ar2.push_back(help2->data);
+        help2=help2->next;
+    }
+
+
+    Node * trav=head;
+    int i=0;
+    int j=0;
+
+
+    while(i<ar1.size()&&j<ar2.size())
+    {
+        if(ar1[i]<=ar2[j])
+        {
+            trav->data=ar1[i];
+            i++;
+            trav=trav->next;
+        }
+        else
+        {
+            trav->data = ar2[j];
+            j++;
+            trav=trav->next;
+
+        }
+    }
+
+    while(i<ar1.size())
+    {
+
+        trav->data=ar1[i];
+        i++;
+        trav=trav->next;
+
+
+    }
+
+    while(j<ar2.size())
+    {
+        trav->data = ar2[j];
+        j++;
+        trav=trav->next;
+
+    }
+
+
+
+}
+
+
+
+void mergesort(Node*head,Node*tail)
+{
+    if(head->next!=NULL)
+    {
+
+       cout<<"inside recursion call"<<endl;
+
+        Node*temp=head;
+        int len=1;
+        //  ListNode*prev=head;
+        while(temp->next!=NULL)
+        {
+
+            temp=temp->next;
+            len++;
+
+
+        }
+        int cnt=0;
+
+        Node*mid=head;
+        while(cnt<(len/2)-1)
+        {
+            mid=mid->next;
+            cnt++;
+        }
+
+
+
+
+
+
+        mergesort(head,mid);
+        mergesort(mid->next->next,tail);
+        merge(head,tail);
+
+    }
+
+}
+
+
+
+
+
+
+
+
+int main() {
+    //                                                          THEORY
+    //BASICALLY EVRY NODE IS AN OBJECT (OF A CLASS CREATED BY US WHICH IMPLEMENTS ITS FUNCTIONALITY) AND LINKED LISTS IS JUST A COLLECTION OF THESE OBJECTS
+    //THESE OBJECTS JUST POINT TO EACH OTHER IF THEY POINT TO EACH OTHER THEY ARE A PART OF THE COLLECTION
+
+
+    //LINKED LISTS : Dynamic Linear data structure which is a collection of nodes
+    //NODE : It is a combination of data and address/reference to the next node
+    /*
+     *              NODE                                       NODE
+     *     *********************                       *********************
+     *     |         | pointer |                       |         |         |
+     *     |   3     |   to ***************************|    5    |         |
+     *     |         |next node|                       |         |         |
+     *     *********************                       *********************
+     *        data     pointer
+     *
+     */
+
+    //                            WHY LINKED LISTS?
+    //Linked lists are use so that we can change size of data structure during runtime
+    //Vectors can do the same but in case of vectors whenever we push element a new vecotr is created at that address with enough memory and then
+    //the values of previous vector are cpoied into it.   THIUS IS TIME CONSUMING AND CONSUMING MEMORY
+    //thats where linked lists come in
+
+
+    //WE CAN GROW AND SHRINK LINKED LISTS DURING RUNTIME AND AVOIDINF MEMEORY WASTAGE
+    //DELETION IS EASIER IN LL BECAUSE WE DONT NEED TO SHIFT ELEMENTS ON DELETION LIKE ARRAYS
+    //THEY ARE STORED IN HEAPS
+    //THE FIRST NODE IS CALLED HEAD AND LAST IS CALLED TAIL AND POINTS TO NULL
+    //TYPES :  SINGLY LL , DOUBLY LL , CIRCULAR LL
+
+
+    //THE NODE IS IMPLEMENTED THROUGH  A CLASS CONTAINING DATA AND THEN POINTER TO THAT CLASS TYPE ITSELF i.e.
+    //if we create a class called llnode we have a varibale for data and a pointer to an object of llnode class type i.e llnode * ptr;
+
+
+ //===============================================================================================================================================================
+ //===============================================================================================================================================================
+
+
+  //                                                              MAIN CODE
+
+//    Node* node1=new Node(10);//creating a pointer object
+//    //a node containing 10 and pointing to null
+//
+//    cout<<node1->data<<endl;
+//    //cout<<(*node1).data<<endl;
+//    cout<<node1->next<<endl;
+//
+//    //head pointed to node1 :
+//    Node *head=node1;//this head refers to the startng point when we use insertathead its value changes to the new node
+//    Node*tail=node1; //this tail refers to the ednong point at the start when there is only one node both head and tail are same
+//    print(head);
+//
+//
+//    //INSERTING AT HEAD
+//
+//    InsertAtHead(head,5);
+//
+//    //PRINTING
+//    print(head);
+//
+//
+//
+//    //INSERTING AT TAIL
+//    insertAttail(tail,30);
+//
+//
+//    print(head);
+//
+//    insertAtPosition(head,tail,3,22);
+//    insertAtPosition(head,tail,1,2);
+//    insertAtPosition(head,tail,6,29);
+//    print(head);
+//
+//
+//    cout<<"HEAD : "<<head->data<<endl;
+//    cout<<"TAIL : "<<tail->data<<endl;
+//
+//    deleteNode(head,tail,3);
+//    print(head);
+//
+//
+//    cout<<"HEAD : "<<head->data<<endl;
+//    cout<<"TAIL : "<<tail->data<<endl;
+//    deleteNode(head,tail,1);
+//    print(head);
+//
+//
+//    cout<<"HEAD : "<<head->data<<endl;
+//    cout<<"TAIL : "<<tail->data<<endl;
+//    deleteNode(head,tail,4);
+//    print(head);
+//
+//
+//    cout<<"HEAD : "<<head->data<<endl;
+//    cout<<"TAIL : "<<tail->data<<endl;
+
+
+
+Node* head=new Node(4);
+Node* tail=head;
+//    insertAttail(tail,4);
+    insertAttail(tail,2);
+    insertAttail(tail,1);
+    insertAttail(tail,3);
+    Node* temp=head;
+    print(head);
+    int len=1;
+
+    while(temp->next!=NULL)
+    {
+       // temp=temp->next;
+        len++;
+
+    }
+   // Node* tail=temp;
+  //  mergesort(head,tail);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+}
