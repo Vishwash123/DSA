@@ -1,0 +1,285 @@
+#include <iostream>
+
+using namespace std;
+
+class Node{
+public:
+
+    int data;
+    Node* prev;
+    Node* next;
+
+
+    Node(int d){
+        this->data=d;
+        this->prev=NULL;
+        this->next=NULL;
+
+
+    }
+
+
+    ~Node (){
+        if (this->next!=NULL &&this->prev!=NULL){
+            delete prev;
+            delete next;
+            this->prev=NULL;
+            this->next=NULL;
+        }
+
+
+    }
+};
+
+
+
+void insertAthead(Node*&head,Node*&tail,int d){
+
+    if(head==NULL)//this only arises in case of doubly linked lists
+        //because at the start head is null it isnt an object of node class right now thats why we handle it it a way that we are creating our first node;
+        //it doesnt arise in singly because if we have head null at the start we create a new node
+        //and assign head to its next pointer which is null so next store null so it works;
+        //but here we actually use head->prev pointer which wont exist if it contaons null value
+        //but in singly you wont update hte va;ue of tail tho so you actually need to ahndle it sifferenlty there as well
+    {
+        Node*temp=new Node(d);
+        head=temp;
+        tail=temp;
+
+
+    }
+    else
+    {
+    Node* temp=new Node(d);
+    head->prev=temp;
+    temp->next=head;
+    head=temp;}
+}
+
+
+
+
+
+
+
+
+void insertAttail(Node*&tail,int d){
+    Node* temp=new Node(d);
+    temp->prev=tail;
+    temp->next=NULL;
+    tail->next=temp;
+    tail=temp;
+}
+
+
+
+
+
+void insertAtposition(Node*&head,Node*&tail,int d,int position){
+
+    if (position==1)
+    {
+        insertAthead(head,tail,d);
+        return;
+    }
+
+    Node* temp=new Node(d);
+    Node* ref=head;
+
+
+    int cnt=1;
+    while (cnt<position-1)
+    {
+
+        ref=ref->next;
+        cnt++;
+    }
+
+    if (ref->next==NULL)
+    {
+        insertAttail(tail,d);
+        return;
+    }
+
+
+    ref->next->prev=temp;
+    temp->next=ref->next;
+    temp->prev=ref;
+    ref->next=temp;
+
+
+}
+
+
+
+
+
+
+void deleteNode(Node*&head,Node*&tail,int position){
+    cout<<endl<<endl<<"DELETING ELEMENT AT POSITION : "<<position<<endl;
+
+
+        if (position==1)
+        {
+            Node*temp=head;
+            head=head->next;
+            head->prev=NULL;
+            temp->next=NULL;
+            delete temp;
+            return;
+
+        }
+
+
+        Node* curr=head;
+        Node* prev=NULL;
+        int cnt=1;
+        while(cnt<position)
+        {
+            prev=curr;
+            curr=curr->next;
+            cnt++;
+
+        }
+
+        if (curr->next==NULL)
+        {
+            tail->prev=NULL;
+            prev->next=tail->next;
+            tail=prev;
+            return;
+        }
+
+        prev->next=curr->next;
+        curr->next->prev=prev;
+        curr->prev=NULL;
+        curr->next=NULL;
+        delete curr;
+
+
+}
+
+
+
+void print(Node*&head)
+{
+    Node*temp=head;
+    cout<<endl<<endl;
+    while(temp!=NULL)
+    {
+
+        cout<<"Address of the node : "<<temp<<" , Data : "<<temp->data<<" , Address of next node : "<<temp->next<<" , Address of previous node : "<<temp->prev<<endl;
+        temp=temp->next;
+    }
+
+
+}
+
+
+
+void showheadtail(Node*&head,Node*&tail){
+    cout<<"HEAD ADDRESS : "<<head<<" , HEAD VALUE : "<<head->data<<" , TAIL ADDRESS : "<<tail<<" , TAIL VALUE : "<<tail->data<<endl;
+}
+
+
+
+
+
+void getLength(Node*&head){
+    Node* temp=head;
+    int len=0;
+    while(temp!=NULL)
+    {
+        len++;
+        temp=temp->next;
+    }
+    cout<<"Length : "<<len<<endl;
+}
+
+int main() {
+
+//===============================================================================================================================================================
+//===============================================================================================================================================================
+
+//DOUBLY LINKED LISTS : IT CONTAINS ANOTHER POINTER CALLED THE PREVIOUS POINTER WHICH CONTAINS THE ADDRESS TO THE PREVIOUS NODE
+
+
+
+//===============================================================================================================================================================
+//===============================================================================================================================================================
+
+
+
+    Node* node1=new Node(5);
+    Node* head=node1;
+    Node* tail=node1;
+
+    print(head);
+    getLength(head);
+
+    insertAthead(head,tail, 2);
+    print(head);
+    getLength(head);
+    showheadtail(head,tail);
+
+    insertAttail(tail,9);
+    print(head);
+    getLength(head);
+    showheadtail(head,tail);
+
+
+
+
+    insertAtposition(head,tail,6,3);
+    print(head);
+    getLength(head);
+    showheadtail(head,tail);
+
+
+
+    insertAtposition(head,tail,1,1);
+    print(head);
+    getLength(head);
+    showheadtail(head,tail);
+
+
+    insertAtposition(head,tail,10,6);
+    print(head);
+    getLength(head);
+    showheadtail(head,tail);
+
+
+
+    deleteNode(head,tail,2);
+    print(head);
+    getLength(head);
+    showheadtail(head,tail);
+
+    deleteNode(head,tail,1);
+    print(head);
+    getLength(head);
+    showheadtail(head,tail);
+
+    deleteNode(head,tail,4);
+    print(head);
+    getLength(head);
+    showheadtail(head,tail);
+
+
+
+
+//if list is empty then handle it separately
+
+//Node* head=NULL;
+//Node* tail=NULL;
+//insertAthead(head,1);
+//print(head);
+//getLength(head);
+//    showheadtail(head,tail);
+
+
+
+
+
+
+}
