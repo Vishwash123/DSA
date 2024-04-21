@@ -1,0 +1,157 @@
+#include <iostream>
+
+using namespace std;
+
+class Node{
+public:
+
+    int data;
+    Node* next;
+
+    Node(int d){
+        this->data=d;
+        this->next=NULL;
+    }
+
+
+    ~Node(){
+        if (this->next!=NULL)
+        {
+            delete next;
+            this->next=NULL;
+        }
+    }
+};
+
+
+
+void insertNode(Node*&tail,int d,int element){
+    if (tail==NULL)
+    {
+        Node* temp=new Node(d);  // 5 6 7'
+        tail=temp;
+        temp->next=temp;
+
+        return;
+    }
+else {
+        Node *temp = new Node(d);
+        Node *curr = tail;
+
+        while (curr->data!=element) {
+            curr=curr->next;
+        }
+
+//        if (curr == tail) {
+//            tail = temp;
+//        }
+
+        temp->next = curr->next;
+        curr->next = temp;
+
+
+    }
+
+}
+
+
+
+void deleteNode(Node*&tail,int val){
+
+    if(tail==NULL)
+    {
+        cout<<"empty list"<<endl;
+        return;
+    }
+
+    Node*prev=tail;
+    Node* curr=prev->next;
+    while(curr->data!=val)
+    {
+        prev=curr;
+        curr=curr->next;
+
+    }
+
+    prev->next=curr->next;
+    if (tail==curr)
+    {
+        tail=curr->next;
+    }
+    if(curr==prev){
+        tail=NULL;
+    }
+    curr->next=NULL;
+    delete curr;
+
+
+}
+
+
+
+void print(Node*&tail){
+    Node*temp=tail;
+    do {
+        cout<<"Address of node : "<<temp<<" , Data : "<<temp->data<<" , Address of next node : "<<temp->next<<endl;
+        temp=temp->next;
+
+    }while(temp!=tail);
+
+    cout<<"tail : "<<tail<<" , value : "<<tail->data<<endl;
+}
+
+
+
+int main() {
+
+//================================================================================================================================================================
+//================================================================================================================================================================
+
+/*
+ *   Circular linked list is a singly or doubly linked list where the last tail node rather than pointing to null points to the starting head node;
+ */
+
+//================================================================================================================================================================
+//================================================================================================================================================================
+Node* tail=NULL;
+insertNode(tail,5,1);
+insertNode(tail ,6,5);
+insertNode(tail,7,6);
+insertNode(tail,8,6);
+insertNode(tail,2,5);
+insertNode(tail,1,7);
+insertNode(tail,10,6);
+print(tail);
+
+
+//    deleteNode(tail,6);
+//    print(tail);
+//
+//    deleteNode(tail,5);
+//    print(tail);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+}
