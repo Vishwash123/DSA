@@ -1,0 +1,374 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+
+class Node{
+public:
+    int data;
+    Node* left;
+    Node* right;
+
+
+    Node(int d)
+    {
+        this->data=d;
+        this->left=NULL;
+        this->right=NULL;
+    }
+};
+//
+//Node* insertIntoBST(Node* &root,int data)
+//{
+//    if(root==NULL)
+//    {
+//        root=new Node(data);
+//        return root;
+//    }
+//    if(data>root->data)
+//    {
+//        insertIntoBST(root->right,data);
+//    }
+//    else
+//    {
+//        insertIntoBST(root->left,data);
+//    }
+//    return root;
+//}
+//
+//
+//
+//void takeInput(Node* &root){
+//    int data;
+//    cin>>data;
+//    while(data!=-1)
+//    {
+//        root = insertIntoBST(root,data);
+//        cin>>data;
+//    }
+//}
+
+
+Node* InsertIntoBST(Node* &root,int data)
+{
+    if(root==NULL)
+    {
+        root=new Node(data);
+        return root;
+    }
+
+    if(data>root->data)
+    {
+        InsertIntoBST(root->right,data);
+    }
+    else
+    {
+        InsertIntoBST(root->left,data);
+    }
+    return root;
+}
+
+
+
+void takeInput(Node* &root)
+{
+    int data;
+    cin>>data;
+    while(data!=-1)
+    {
+        InsertIntoBST(root,data);
+        cin>>data;
+    }
+}
+
+
+void levelTraversal(Node* root)
+{
+    cout<<endl<<"Printing BST : "<<endl;
+    queue<Node*> q;
+    q.push(root);
+    q.push(NULL);
+    while(!q.empty())
+    {
+        Node* temp = q.front();
+        q.pop();
+        if(temp==NULL)
+        {
+            cout<<endl;
+            if(!q.empty())
+            {
+                q.push(NULL);
+            }
+        }
+        else {
+            cout<<temp->data<<" ";
+            if (temp->left) {
+                q.push(temp->left);
+            }
+            if (temp->right) {
+                q.push(temp->right);
+            }
+        }
+    }
+
+}
+
+
+void inorder(Node* root)
+{
+    if(root==NULL)
+    {
+        return;
+    }
+    inorder(root->left);
+    cout<<root->data<<" ";
+    inorder(root->right);
+}
+
+
+
+int inorderPredecessor(Node* root,int data)
+{
+    int pred=-1;
+    Node* p=NULL;
+    while(root)
+    {
+        if(root->data<data)
+        {
+            pred=root->data;
+            root=root->right;
+        }
+        else if(root->data>data)
+        {
+            root=root->left;
+        }
+        else
+        {
+            if(root->left) {
+                p = root->left;
+                while (p->right) {
+                    pred = p->data;
+                    p = p->right;
+                }
+            }
+            break;
+        }
+    }
+    return pred;
+}
+
+
+//
+//int inorderSuccessor(Node* root,int data)
+//{
+//    int suc=-1;
+//    Node* succ=NULL;
+//   while(root)
+//   {
+//       if(root->data<data)
+//       {
+//           root=root->right;
+//       }
+//       else if(root->data>data)
+//       {
+//           suc=root->data;
+//           root=root->left;
+//       }
+//       else
+//       {
+//           if (root->right) {
+//               // If the node has a right subtree, find the leftmost node in it
+//               succ = root->right;
+//               while (succ->left)
+//                   succ = succ->left;
+//           }
+//           // No right subtree, so successor remains the ancestor
+//           suc=succ->data;
+//           break;
+//
+//
+//       }
+//   }
+//   return suc;
+//
+//}
+
+
+Node* minValfromRight(Node* root)
+{
+    while(root->left)
+    {
+        root=root->left;
+
+    }
+    return root;
+}
+
+
+
+Node* deleteNode(Node* root,int data)
+{
+    if(root==NULL){
+        return root;
+    }
+    if(root->data==data)
+    {
+        //0child
+
+        if(root->left==NULL&&root->right==NULL)
+        {
+            delete root;
+            return NULL;
+        }
+
+        //1child
+        if(root->left==NULL)
+        {
+            Node* temp=root->right;
+            delete root;
+            return temp;
+        }
+        if(root->right==NULL)
+        {
+            Node* temp=root->left;
+            delete root;
+            return temp;
+        }
+        //2child
+        if(root->right &&root->left)
+        {
+            int inorderSuc = minValfromRight(root->right)->data;//can also use inorder predecessor
+
+            root->data=inorderSuc;
+            root->right= deleteNode(root->right,root->data);
+            return root;
+
+        }
+
+
+    }
+
+    else if(root->data<data)
+    {
+        root->right = deleteNode(root->right,data);
+        return root;
+    }
+
+    else
+    {
+        root->left=deleteNode(root->left,data);
+        return root;
+    }
+
+
+}
+
+int main() {
+
+    //BINARY SEARCH TREE
+    //based on BINARY SEARCH
+    //LEFT SIDE NODES : lesser value than root;
+    //RIGHT SIDE NOES: larger value than root;
+    //this property applies to every node
+//
+//    10
+//    8
+//    21
+//    7
+//    27
+//    5
+//    4
+//    3
+//    6
+//    -1
+
+    //for 10,8,21,7,27,5,4,3,6
+    // binary search tree
+    /*
+     *
+     *                                                           10
+     *                                                          /  \
+     *                                                         /    \
+     *                                                        8     21
+     *                                                       /        \
+     *                                                      /          \
+     *                                                     7            27
+     *                                                    /
+     *                                                   5
+     *                                                  / \
+     *                                                 4   6
+     *                                                /
+     *                                               3
+     * */
+
+    //Algorithm is : compaere no with root if it is > root go right else go left;
+
+    //INSERTION
+    Node* root=NULL;
+    cout<<"Enter data to create BST"<<endl;
+    takeInput(root);
+    levelTraversal(root);
+    InsertIntoBST(root,30);
+
+    levelTraversal(root);
+
+    //NOTE : INORDER OF BST IS ALWAYS SORTED
+    //NOTE : MINIMUM VALUE IS ALWAYS THE LEFTMOST     SO WE CAN JUST LOOP UNTIL LEFT IS NULL TO FIND IT
+    //NOTE : MAXIMUM VALUE IS ALWAYS THE RIGHTMOST    SO WE CAN JUST LOOP UNTIL RIGHT IS NULL TO FIND IT
+
+    cout<<endl<<"Printing inorder : "<<endl;
+    inorder(root);
+    //searching a node on leetcode;
+
+
+    //INORDER PREDECESSOR :
+    //the greatest node that is smaller than the given node
+
+    //so as we know left of bst = smaller and right of bst = larger
+    //so for predecessor we can say that we require a smaller element than our node so we start on left.
+    // now we also need the largest of all the element on left that means we need to find rightmost node in left subtree
+    // if left subtree doesnt exist. we need to find the node on right subtree which is the immediate ancestor of given node and given node is in its right side
+
+
+    //INORDER SUCCESSOR :
+    //the smallest node that is greater than given node
+
+    //similarly successor will be the leftmost node in rigth subtree if it exists
+    // otherwise we need to find the immediate ancestor node in which given node is on its left subtree
+    cout<<"Enter node for inorder predecessor : "<<endl;
+//    int d1;
+//    cin>>d1;
+//    cout<<inorderPredecessor(root,d1);
+//    cout<<"Enter node for inorder successor : "<<endl;
+//    int d2;
+//    cin>>d2;
+//    cout<<inorderSuccessor(root,d2);
+
+
+
+
+
+
+
+
+
+    //DELETION:
+    cout<<"enter node to delete"<<endl;
+    int d;
+    cin>>d;
+
+    deleteNode(root,d);
+
+    levelTraversal(root);
+
+
+
+
+
+
+
+
+
+
+
+
+}
