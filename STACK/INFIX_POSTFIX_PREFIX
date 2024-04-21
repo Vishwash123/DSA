@@ -1,0 +1,464 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+
+int precedence(char op)
+{
+    if ( op == '+'  || op == '-' )
+    {
+        return 1;
+    }
+    else if ( op == '*' || op == '/' )
+    {
+        return 2;
+    }
+    return 0;
+
+}
+
+
+double calculate(int a,int b,char op)
+{
+    switch(op){
+        case '+':
+            return a+b;
+        case '-':
+            return a-b;
+        case '*':
+            return a*b;
+        case '/':
+            return a/b;
+        default:
+            return 0;
+    }
+    return 0;
+}
+
+
+int main() {
+
+/*==================================================================================================================================================================
+==================================================================================================================================================================*/
+
+//                                                                INFIX EVALUATION
+
+
+//    string s;
+//    getline( cin , s );
+//    int n = s.length();
+//    stack<double> values;
+//    stack<char> ops;
+//
+//    for (int i=0;i<n;i++)
+//    {
+//        // if current character is space skip the iteration
+//        if ( s[i] == ' ' )
+//        {
+//            continue;
+//        }
+//
+//        // if current character is a digit or '-' sign and if its - sign check whether the next element is a number or not (for -ve numbers)
+//        if ( isdigit(s[i]) || ( s[i] == '-' && i+1 < n && isdigit(s[i+1]) ) )
+//        {
+//            // we can enter this condition by 2 ways so either it is a digit or - sign so we check if it is a - sign
+//            double num = 0;
+//            int sign = 1;   //this is the multiplier we add depending on whether or not we have - sign
+//
+//            if ( s[i] == '-' )  // handling negative numbers
+//            {
+//                sign = -1;
+//                i++;
+//            }
+//
+//            while ( i<s.length() && isdigit(s[i]) ) // handling multi digit numbers
+//            {
+//                num = num * 10 + ( s[i] - '0' );
+//                i++;
+//            }
+//            i--;
+//            values.push(num); //push the number into the values stack
+//        }
+//
+//        // if current character is ( just push it into the operators stack
+//        else if ( s[i] == '(' )
+//        {
+//            ops.push(s[i]);
+//        }
+//
+//        // if current character is ) we need to evaluate the expression inside these brackets so we run a loop until we find (
+//        else if ( s[i] == ')' )
+//        {
+//            while ( ops.top() != '(' )
+//            {
+//                double b = values.top(); values.pop();
+//                double a = values.top(); values.pop();
+//                char op = ops.top(); ops.pop();
+//                values.push(calculate( a , b , op ));
+//
+//            }
+//            ops.pop(); //after the entire expression inside the brackets is evaluated pop the remaining opening bracket as it is of no further use
+//        }
+//
+//        // if it is any other operator if its precedence is lower than the top operator first we will have to evaluate all higher precedence operations
+//        // only then we can push the new operator into the stack
+//        else
+//        {
+//            while ( !ops.empty() && precedence(ops.top()) >= precedence(s[i]) )
+//            {
+//                double b = values.top(); values.pop();
+//                double a = values.top(); values.pop();
+//                char op = ops.top(); ops.pop();
+//                values.push(calculate( a , b , op ));
+//            }
+//            ops.push(s[i]);  //push the operator into stack after all higher precedence operations are done
+//        }
+//    }
+//
+//
+//    while ( !ops.empty() )
+//    {
+//        double b = values.top(); values.pop();
+//        double a = values.top(); values.pop();
+//        char op = ops.top(); ops.pop();
+//        values.push(calculate( a , b , op ));
+//    }
+//
+//    cout<<values.top()<<endl;
+
+
+/*==================================================================================================================================================================
+==================================================================================================================================================================*/
+
+//                                                                PREFIX EVALUATION
+
+    //-+7*45+20
+//    string s;
+//    getline( cin,s );
+//    stack<double> values;  // in case of prefix we only need 1 stack for values because there is no case of precedence or brackets in prefix same for postfix
+//
+//    for ( int i = s.length() - 1 ; i >= 0 ; i-- )  // in prefix we start from right side as we need numbers first
+//    {
+//        if ( s[i] == ' ' )
+//        {
+//            continue;
+//        }
+//
+//        else if ( isdigit(s[i]) ) //here we dont need to worry about negative numbers
+//        {
+//            double num = 0;
+//            while ( i>=0 && isdigit(s[i]) )
+//            {
+//                num = num * 10 + ( s[i]- '0' );
+//                i--;
+//            }
+//            i++;
+//            values.push(num);
+//        }
+//
+//        // no brackets in pre and post fix only other operators matter we just need to be careful about the operands' order
+//        else
+//        {
+//            double a = values.top(); values.pop();
+//            double b = values.top(); values.pop();
+//
+//            switch( s[i] ){
+//
+//                case '+':
+//                    values.push( a + b ); break;
+//                case '-':
+//                    values.push( a - b ); break;
+//                case '*':
+//                    values.push( a * b ); break;
+//                case '/':
+//                    values.push( a / b ); break;
+//            }
+//
+//
+//        }
+//    }
+//
+//    cout<<values.top()<<endl;
+
+
+/*==================================================================================================================================================================
+==================================================================================================================================================================*/
+
+//                                                                POSTFIX EVALUATION
+
+//      string s;
+//      getline( cin,s );
+//      stack<double> values;
+//
+//      for ( int i = 0 ; i < s.length() ; i++ )
+//      {
+//          if ( s[i] == ' ' )
+//          {
+//              continue;
+//          }
+//
+//          else if ( isdigit(s[i]) )
+//          {
+//              double num = 0;
+//              while ( i < s.length() && isdigit(s[i]) )
+//              {
+//                  num = num * 10 + ( s[i] - '0' );
+//                  i++;
+//              }
+//              i--;
+//              values.push(num);
+//          }
+//
+//          else
+//          {
+//              double b = values.top(); values.pop();
+//              double a = values.top(); values.pop();
+//
+//              switch( s[i] ) {
+//
+//                  case '+':
+//                      values.push(a + b);
+//                      break;
+//                  case '-':
+//                      values.push(a - b);
+//                      break;
+//                  case '*':
+//                      values.push(a * b);
+//                      break;
+//                  case '/':
+//                      values.push(a / b);
+//                      break;
+//              }
+//          }
+//      }
+//
+//
+//      cout<<values.top()<<endl;
+
+
+/*==================================================================================================================================================================
+==================================================================================================================================================================*/
+
+//                                                                PREFIX TO POSTFIX
+
+//    string s;
+//    getline(cin,s);
+//    stack<string> values;
+//    for (int i=s.length()-1;i>=0;i--)
+//    {
+//        if (s[i]>='A' && s[i]<='Z')
+//        {
+//            values.push(string(1,s[i]));
+//        }
+//        else
+//        {
+//            string a = values.top(); values.pop();
+//            string b = values.top(); values.pop();
+//            string res = "";
+//            res =  res + a + b + s[i];
+//            values.push(res);
+//        }
+//    }
+//
+//    cout<<values.top()<<endl;
+
+
+/*==================================================================================================================================================================
+==================================================================================================================================================================*/
+
+//                                                                POSTFIX TO PREFIX
+
+
+//    string s;
+//    getline(cin,s);
+//    stack<string> values;
+//    for (int i=0;i<s.length();i++)
+//    {
+//        if (s[i]>='A' && s[i]<='Z')
+//        {
+//            values.push(string(1,s[i]));
+//        }
+//        else
+//        {
+//            string a = values.top(); values.pop();
+//            string b = values.top(); values.pop();
+//            string res = "";
+//            res =  res + s[i] + b + a ;
+//            values.push(res);
+//        }
+//    }
+//
+//    cout<<values.top()<<endl;
+
+
+/*==================================================================================================================================================================
+==================================================================================================================================================================*/
+
+////                                                                POSTFIX TO INFIX
+//
+//
+//    string s;
+//    getline(cin,s);
+//    stack<string> values;
+//    for (int i=0;i<s.length();i++)
+//    {
+//        if (s[i]>='a' && s[i]<='z')
+//        {
+//            values.push(string(1,s[i]));
+//        }
+//        else
+//        {
+//            string a = values.top(); values.pop();
+//            string b = values.top(); values.pop();
+//            string res = "";
+//            res =  res + '(' + b + s[i] + a + ')' ;
+//            values.push(res);
+//        }
+//    }
+//
+//    cout<<values.top()<<endl;
+
+
+/*==================================================================================================================================================================
+==================================================================================================================================================================*/
+
+////                                                                PREFIX TO INFIX
+
+//
+//    string s;
+//    getline(cin,s);
+//    stack<string> values;
+//    for (int i=s.length()-1;i>=0;i--)
+//    {
+//        if (s[i]>='A' && s[i]<='Z')
+//        {
+//            values.push(string(1,s[i]));
+//        }
+//        else
+//        {
+//            string a = values.top(); values.pop();
+//            string b = values.top(); values.pop();
+//            string res = "";
+//            res =  res + '(' + a + s[i] + b + ')' ;
+//            values.push(res);
+//        }
+//    }
+//
+//    cout<<values.top()<<endl;
+//
+///*==================================================================================================================================================================
+//==================================================================================================================================================================*/
+//
+//////                                                                INFIX TO POSTFIX
+//
+//
+//    string s;
+//    getline(cin,s);
+//    stack<char> ops;
+//    string ans="";
+//    for (int i=0;i<s.length();i++)
+//    {
+//        if (s[i] == ' ')
+//        {
+//            continue;
+//        }
+//
+//        else if (s[i]>='A' && s[i]<='Z')
+//        {
+//            ans+=s[i];
+//        }
+//
+//        else if (s[i]=='(')
+//        {
+//            ops.push(s[i]);
+//        }
+//
+//        else if (s[i]==')')
+//        {
+//            while (ops.top()!='(')
+//            {
+//                ans+=ops.top();
+//                ops.pop();
+//            }
+//            ops.pop();
+//
+//        }
+//
+//        else
+//        {
+//            while (!ops.empty() && precedence(ops.top())>=precedence(s[i]))
+//            {
+//                ans+=ops.top();
+//                ops.pop();
+//            }
+//            ops.push(s[i]);
+//        }
+//    }
+//
+//    while(!ops.empty())
+//    {
+//        ans+=ops.top();
+//        ops.pop();
+//    }
+//    cout<<ans<<endl;
+
+
+
+/*==================================================================================================================================================================
+==================================================================================================================================================================*/
+
+////                                                                INFIX TO POSTFIX
+
+
+    string s;
+    getline(cin,s);
+    reverse(s.begin(),s.end());
+    stack<char> ops;
+    string ans="";
+    for (int i=0;i<s.length();i++)
+    {
+        if (s[i] == ' ')
+        {
+            continue;
+        }
+
+        else if (s[i]>='A' && s[i]<='Z')
+        {
+            ans+=s[i];
+        }
+
+        else if (s[i]==')')
+        {
+            ops.push(s[i]);
+        }
+
+        else if (s[i]=='(')
+        {
+            while (ops.top()!=')')
+            {
+                ans+=ops.top();
+                ops.pop();
+            }
+            ops.pop();
+
+        }
+
+        else
+        {
+            while (!ops.empty() && precedence(ops.top())>=precedence(s[i]))
+            {
+                ans+=ops.top();
+                ops.pop();
+            }
+            ops.push(s[i]);
+        }
+    }
+
+    while(!ops.empty())
+    {
+        ans+=ops.top();
+        ops.pop();
+    }
+
+    reverse(ans.begin(),ans.end());
+    cout<<ans<<endl;
+}
