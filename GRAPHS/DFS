@@ -1,0 +1,79 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+//if we are using vectors
+//void dfs(int node,vector<bool> &visited,vector<int> *adj)
+
+//if we are using maps
+void dfs(int node,unordered_map<int,bool> &visited,unordered_map<int,list<int>> &adj)
+{
+    visited[node] = true;
+    cout<<node<<" ";
+    for (auto x:adj[node])
+    {
+        if(!visited[x])
+        {
+            dfs(x,visited,adj);
+        }
+    }
+}
+
+
+//USE CASES : 
+/*
+ * GRAPH TRAVERSAL
+ * MATRIX PROBLEMS LIKE NUMBER OF ISLANDS (DFS CAN WORK ON 4-8 DIRECTIONS DEPENDING UPON CONSTRAINTS IN A MATRIX) 
+ * BRIDGE AND ARTICULATION POINT DETECTION
+ * CYCLE DETECTION
+ * IN KOSARAJU'S ALGO TO FIND STRONGLY CONNECTED COMPONENTS
+ * PATH FINDING //NOT SHORTEST IT JUST FIND ANY PATH THAT EXISTS OR MAYBE ALL PATHS THAT EXIST BETWEEN 2 NODES
+ * BIPARTITE DETECTION
+ * 
+ */
+
+
+int main() {
+    int n;
+    int e;
+    cout<<"Enter the no. of vertices : ";
+    cin>>n;
+    cout<<"Enter the no. of edges : ";
+    cin>>e;
+    vector<vector<int>> edges; 
+    
+    for (int i=0;i<e;i++)
+    {
+        int u,v;
+        cout<<"Enter starting and ending node of edge : ";
+        cin>>u>>v;
+        edges.push_back({u,v});
+    }
+    
+    unordered_map<int,list<int>> adj;
+    //OR vector<int> adj[n]; //ARRAY OF VECTORS
+    for(int i=0;i<e;i++)
+    {
+        int u = edges[i][0];
+        int v = edges[i][1];
+        
+        adj[u].push_back(v);
+        //for bidirectional/undirected : adj[v].push_back(u);
+        
+    }
+    
+    
+    unordered_map<int,bool> visited;
+    //OR vector<bool> visited(n);
+    
+    
+    for (int i=0;i<n;i++) //we loop so that we can handle disconnected components for a single connected component a single dfs will traverse the entire connected 
+        // component
+    {
+        if(!visited[i])
+        {
+            dfs(i,visited,adj);
+        }
+    }
+    
+    
+}
