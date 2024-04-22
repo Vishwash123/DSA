@@ -1,0 +1,112 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+
+//void bfs(int node,unordered_map<int,bool> &visited,unordered_map<int,list<int>> &adj)
+//{
+//    queue<int> q;
+//    q.push(node);
+//    visited[node]=true;
+//    while(!q.empty())
+//    {
+//        int front = q.front();
+//        cout<<front<<" ";
+//        q.pop();
+//        for (auto x:adj[front])
+//        {
+//            if(!visited[x])
+//            {
+//                visited[x]=true;
+//                q.push(x);
+//            }
+//        }
+//    }
+//}
+
+
+//A MORE INTUITIVE IMPLEMENTATION OF BFS WHERE AN ENTIRE LEVEL IS CLEARED IN ONE GO :
+//THIS IMPLEMENTATION IN USEFUL IN PROBLEMS WHERE YOU HAVE TO DEAL WITH THINGS LEVEL BY LEVEL
+//LIKE OPEN THE LOCK, MINIMUM GENETIC MUTATION,WORD LADDER
+
+void bfs(int node,unordered_map<int,bool> &visited,unordered_map<int,list<int>> &adj)
+{
+    queue<int> q;
+    q.push(node);
+    visited[node]=true;
+    while(!q.empty())
+    {
+        int n=q.size();
+        while(n--) { //all nodes in one level are popped and their neighbours are pushed 
+             //we can find the depth of bfs tree like this helpful in cases where the naswer is related to the level / depth of bfs 
+            int front = q.front();
+            cout << front << " ";
+            q.pop();
+            for (auto x: adj[front]) {
+                if (!visited[x]) {
+                    visited[x] = true;
+                    q.push(x);
+                }
+            }
+        }
+    }
+}
+
+//USE CASES:
+/*
+ * 
+ * SHORTEST PATH FINDING (JUST VISUALIZE BFS)
+ * MINIMUM SPANNING TREE
+ * CYCLE DETECTION
+ * BIPARTITE DETECTION
+ * FINDING CONNECTED COMPONENTS 
+ * 
+ * */
+
+
+
+int main() {
+    int n;
+    int e;
+    cout<<"Enter the no. of vertices : ";
+    cin>>n;
+    cout<<"Enter the no. of edges : ";
+    cin>>e;
+    vector<vector<int>> edges;
+
+    for (int i=0;i<e;i++)
+    {
+        int u,v;
+        cout<<"Enter starting and ending node of edge : ";
+        cin>>u>>v;
+        edges.push_back({u,v});
+    }
+
+    unordered_map<int,list<int>> adj;
+    //OR vector<int> adj[n]; //ARRAY OF VECTORS
+    for(int i=0;i<e;i++)
+    {
+        int u = edges[i][0];
+        int v = edges[i][1];
+
+        adj[u].push_back(v);
+        //for bidirectional/undirected : adj[v].push_back(u);
+
+    }
+
+
+    unordered_map<int,bool> visited;
+    //OR vector<bool> visited(n);
+
+
+    for (int i=0;i<n;i++) //we loop so that we can handle disconnected components for a single connected component a single dfs will traverse the entire connected
+        // component
+    {
+        if(!visited[i])
+        {
+            bfs(i,visited,adj);
+        }
+        
+    }
+
+
+}
