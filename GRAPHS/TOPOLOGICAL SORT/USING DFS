@@ -1,0 +1,38 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+void topodfs(int node,unordered_map<int,list<int>> &adj,unordered_map<int,bool> &visited,stack<int> &st) {
+    visited[node] = true;
+    for (auto x:adj[node]) {
+        if(!visited[x]) {
+            topodfs(x,adj,visited,st);
+        }
+    }
+    st.push(node);
+
+}
+
+//TOPOLOGICAL SORTING IS MAINLY USED IN SCHEDULING TASKS ETC:
+//WHERE ONE THING MUST BE COMPLETED BEFORE THE OTHER
+
+int main() {
+    int n;
+    cin>>n;
+    unordered_map<int,list<int>> adj;
+    unordered_map<int,bool> visited;
+    stack<int> st;
+    for(int i=0;i<n;i++) {
+        if(!visited[i]) {
+            topodfs(i,adj,visited,st);
+        }
+    }
+
+    vector<int> ans;
+    while(!st.empty()) {
+        ans.push_back(st.top());
+        st.pop();
+    }
+
+    //now the ans vector has the topological sorted order of vertices
+
+}
