@@ -1,0 +1,45 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+
+
+//TOPOLOGICAL SORTING IS MAINLY USED IN SCHEDULING TASKS ETC:
+//WHERE ONE THING MUST BE COMPLETED BEFORE THE OTHER
+//ONLY WORKS ON DIRECTED ACYCLLIC GRAPHS
+
+int main() {
+    int n;
+    cin>>n;
+    vector<vector<int>> edges;
+    vector<int> indeg(n);
+
+    unordered_map<int,list<int>> adj;
+    for (int i=0;i<edges.size();i++) {
+        int u = edges[i][0];
+        int v = edges[i][1];
+         adj[u].push_back((v));
+        indeg[v]++;
+    }
+    queue<int> q;
+
+    for(int i=0;i<indeg.size();i++) {
+        if(indeg[i]==0) {
+            q.push(i);
+        }
+    }
+    vector<int> ans;
+    while(!q.empty()) {
+        int front = q.front();
+        ans.push_back(front);
+        q.pop();
+        for(auto x:adj[front]) {
+            indeg[x] --;
+            if(indeg[x]==0) {
+                q.push(x);
+            }
+        }
+    }
+
+//ans has the topologically sorted vertices;
+
+}
