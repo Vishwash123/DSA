@@ -1,0 +1,62 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int main() {
+
+    //This algrithm is used for unweighted undirected graph. It is faster than dijkstras and other algos for this type of graphs.
+    //because in this type of graphs we dont need to compare weight due to it being unewighted
+    //SO WE JUST PERFORM DFS STARTING FROM SOURCE AND STORE PARENTS OF ALL NODES IN A VECTOR
+    //ONCE THE BFS IS DONE ALL NODES WILL HAVE THEIR PARENTS ACCORDING TO SHORTEST PATHS
+    //SO WE JUST NEED TO TRACK BACK FROM DESTINATION TO PARENT THAT'LL GIVE US THE SHORTEST PATH
+    //DUE TO THE PROPERTY OF BFS
+    int n;
+    cin>>n;
+    vector<vector<int>> edges;
+    unordered_map<int,list<int>> adj;
+    for(int i=0;i<edges.size();i++) {
+        int u = edges[i][0];
+        int v = edges[i][1];
+
+        adj[u].push_back(v);
+    }
+    int source;
+    cin>>source;
+    int destination ;
+    cin>>destination;
+
+    vector<int> parent(n);
+    parent[source] = -1;
+
+    unordered_map<int,bool> visited;
+
+
+            queue<int> q;
+            q.push(source);
+            visited[source] = true;
+
+            while(!q.empty()) {
+                int front = q.front();
+                q.pop();
+
+                for (auto x:adj[front]) {
+                    if(!visited[x]) {
+                        visited[x]=true;
+                        parent[x]=front;
+                        q.push(x);
+                    }
+                }
+            }
+
+
+
+
+    vector<int> ans;
+    ans.push_back(destination);
+    int temp = destination;
+    while(temp!=source) {
+        temp = parent[temp];
+        ans.insert(ans.begin(),temp);
+    }
+
+}
+
