@@ -1,0 +1,53 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+void dfs(int i,unordered_map<int,list<pair<int,int>>> &adj,unordered_map<int,bool> &visited,stack<int> &st) {
+    visited[i]=true;
+    for(auto x:adj[i]) {
+        if(!visited[x.first]) {
+            dfs(x.first,adj,visited,st);
+        }
+    }
+    st.push(i);
+}
+int main() {
+
+    //Here since we have weighted paths we need to compare distances just set distance of source to 0 and find topological sort
+    //why? because the graph i diected ad it will eliminate all nodes that will be unreachable from the source
+    //then we just keep popping through the stack and comaparing and updating until the stack is empty;
+
+
+    int n;
+    cin>>n;
+    vector<vector<int>> edges;
+    unordered_map<int,list<pair<int,int>>> adj;
+    for(int i=0;i<edges.size();i++) {
+        int u = edges[i][0];
+        int v = edges[i][1];
+        int w = edges[i][2];
+
+        adj[u].push_back({v,w});
+    }
+    vector<int> distance(n,INT_MAX);
+    //set distance of source node  = 0
+    distance[0]=0;
+
+    unordered_map<int,bool> visited;
+    stack<int> st;
+    dfs(0,adj,visited,st);
+
+    while(!st.empty()) {
+        while(!st.top() == INT_MAX) {
+            st.pop();
+        }
+        int top = st.top();
+        st.pop();
+        for (auto x:adj[top]) {
+            if(distance[x.first]>distance[top]  +x.second) {
+                distance[x.first] = distance[top] + x.second;
+            }
+        }
+    }
+//now the distance vector contains all shortest distances form 0 to other nodes;
+
+}
