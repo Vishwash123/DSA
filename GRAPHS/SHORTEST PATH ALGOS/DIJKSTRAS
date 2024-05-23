@@ -1,0 +1,36 @@
+#include <bits/stdc++.h>
+using namespace std;
+int main() {
+    //doesnt work with negative weights
+    int n;
+    cin>>n;
+    int source;
+    cin>>source;
+    vector<pair<int,int>> adj[n];
+    vector<int> distance(n,INT_MAX);
+
+    distance[source]= 0;
+
+    priority_queue<pair<int,int>,vector<pair<int,int>>,greater<pair<int,int>>> pq;
+    pq.push({0,source});
+
+    while(!pq.empty())
+    {
+        int node  = pq.top().second;
+        int dis = pq.top().first;
+        for (auto x:adj[node])
+        {
+            if(dis + x.second < distance[x.first])
+            {
+                distance[x.first] = dis + x.second;
+                pq.push({distance[x.first],x.first});
+            }
+        }
+    }
+
+    //done now distance has shortest distance form source to all nodes
+
+
+
+
+}
