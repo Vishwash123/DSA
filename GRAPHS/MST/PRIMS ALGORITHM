@@ -1,0 +1,59 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+int main(){
+    int n;
+    cin>>n;
+    vector<vector<int>> edges;
+    vector<pair<int,int>> adj[n];
+    
+    //min heap so that we get shortest distances first 
+    priority_queue<vector<int>,vector<vector<int>>,greater<vector<int>>> pq;
+    vector<pair<int,int>> mst(n);
+    vector<bool> visited;
+    //start from any node
+    //pushing (weight,node,parent)
+    pq.push({0,0,-1});
+
+    int sum = 0;
+
+    while(!pq.empty())
+    {
+        int weight = pq.top()[0];
+        int node  = pq.top()[1];
+        int parent = pq.top()[2];
+        pq.pop();
+
+        if(visited[node]) continue;
+
+        visited[node] = true;
+        //making mst
+        mst[node] = {parent,weight};
+        
+        //calculating sum
+        sum+=weight;
+
+        for (auto x:adj[node])
+        {
+            int v = x.first;
+            int w = x.second;
+
+            if(!visited[v])
+            {
+                pq.push({w,v,node});
+            }
+        }
+    }
+
+
+    cout<<"Sum of all edges in MST : "<<sum<<endl;
+    cout<<"The MST : "<<endl;
+    //every node will be included in mst
+    //we start from 1 because 0 has no parent and so no edge 
+    for (int i=1;i<n;i++)
+    {
+        cout<<"from : "<<mst[i].first<<" to  : "<<i<<" weight : "<<mst[i].second<<endl;
+    }
+
+
+}
