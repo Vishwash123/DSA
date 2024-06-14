@@ -1,0 +1,86 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+//BASICALLY WE FIND TOPOLOGICAL SORT. THEN TRANSPOSE THE GRAPH AND THEN DFS ACC. TO TOPOLOGICAL SORT ON THE TRANSPOSE GRAPH
+void topo(int n,vector<bool> &visited,vector<vector<int>> &adj,stack<int> st)
+{
+    visited[n]=true;
+    for(auto x:adj[n])
+    {
+        if(!visited[x])
+        {
+            topo(x,visited,adj,st);
+        }
+    }
+    st.push(n);
+}
+
+
+void dfs(int n,vector<bool> &visited,vector<vector<int>> &adj)
+{
+    visited[n]=true;
+    for(auto x:adj[n])
+    {
+        if(!visited[x])
+        {
+            dfs(x,visited,adj);
+        }
+    }
+
+}
+
+int main() {
+    int n;
+    cin>>n;
+
+    int vr;
+    cin>>vr;
+
+    vector<vector<int>> edges(n);
+
+    vector<vector<int>> adj(vr);
+    for (int i=0;i<edges.size();i++)
+    {
+        int u = edges[i][0];
+        int v = edges[i][1];
+
+        adj[u].push_back((v));
+    }
+
+    stack<int> st;
+    vector<bool> visited(vr);
+    for (int i=0;i<vr;i++)
+    {
+        if(!visited[i])
+        {
+            topo(i,visited,adj, st);
+        }
+    }
+
+    vector<vector<int>> transpose(vr);
+    for (int i=0;i<adj.size();i++)
+    {
+        for (auto y:adj[i])
+        {
+            transpose[y].push_back(i);
+        }
+    }
+
+    int components = 0;
+    fill(visited.begin(),visited.end(),false);
+    while(!st.empty())
+    {
+        int top = st.top();
+        st.pop();
+        if(!visited[top])
+        {
+            components++;
+            dfs(top,visited,transpose);
+        }
+        
+    }
+
+    cout<<components<<endl;
+
+
+}
