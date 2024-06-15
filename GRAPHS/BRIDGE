@@ -1,0 +1,54 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int timer = 1;
+void findbridge(int node,vector<bool> &visited,vector<int> &disc,vector<int> &lowest,int parent,vector<pair<int,int>> &ans
+,unordered_map<int,list<int>> &adj)
+{
+    visited[node]=true;
+    disc[node] = lowest[node] = timer;
+    timer++;
+    for (auto x:adj[node])
+    {
+        if(x==parent)
+        {
+            continue;
+        }
+        if(!visited[x])
+        {
+            findbridge(x,visited,disc,lowest,node,ans,adj);
+
+            lowest[node] = min(lowest[node],lowest[x]);
+
+            if(lowest[x]>disc[node]) //BASICALLY WE THIS IS CHECKING FOR A NORMAL CASE WHERE LOWEST TIME OF NEIGHBOUR SHOULD BE MORE THAN DISC TIME OF CURRENT NODE BUT IF THERE ARE SOME OTHER WAYS TO REACH THE NEIGHBOUR IT WILL BE LESSSER
+            {
+                ans.push_back({x,node});
+            }
+        }
+        else
+        {
+            lowest[node] = min(lowest[node],lowest[x]);
+        }
+    }
+}
+int main() {
+    int n;
+    cin>>n;
+    unordered_map<int,list<int>> adj;
+    vector<int> discovery(n,-1);
+    vector<int> lowest(n,1);
+    vector<bool> visited(n);
+    vector<pair<int,int>> ans;
+    for (int i=0;i<n;i++)
+    {
+        if(!visited[i])
+        {
+            findbridge(i,visited,discovery,lowest,-1,ans,adj);
+        }
+    }
+
+
+    //now ans has all bridges;
+
+
+}
