@@ -1,0 +1,66 @@
+class Solution {
+  public:
+    int timer = 1;
+    void dfs(int node, vector<int> &discovery,vector<int> &lowest,vector<bool> &visited,vector<int> &ans,vector<int> adj[],int parent)
+    {
+        visited[node] = true;
+        discovery[node] = lowest[node] = timer;
+        timer++;
+        int child = 0;
+        for (auto x:adj[node])
+        {
+            if(x==parent) continue;
+            if(!visited[x])
+            {
+                dfs(x,discovery,lowest,visited,ans,adj,node);
+                
+                lowest[node] = min(lowest[node],lowest[x]);
+                
+                if(lowest[x]>=discovery[node] && parent!=-1)
+                {
+                    ans[node]=1;
+                }
+                child++;
+            }
+            else
+            {
+                lowest[node] = min(lowest[node],discovery[x]);
+            }
+        }
+        
+        if(parent==-1 && child>1)
+        {
+            ans[node]=1;
+        }
+        
+    }
+    vector<int> articulationPoints(int V, vector<int>adj[]) {
+        // Code here
+        vector<int> discovery(V,-1);
+        vector<int> lowest(V,-1);
+        vector<bool> visited(V);
+        vector<int> ans(V,0);
+        vector<int> finalans;
+        
+        for (int i=0;i<V;i++)
+        {
+            if(!visited[i])
+            {
+                dfs(i,discovery,lowest,visited,ans,adj,-1);
+            }
+        }
+        
+        for(int i=0;i<V;i++)
+        {
+            if(ans[i]==1)
+            {
+                finalans.push_back(i);
+            }
+        }
+        if (finalans.empty())
+        {
+            return {-1};
+        }
+        return finalans;
+    }
+};
