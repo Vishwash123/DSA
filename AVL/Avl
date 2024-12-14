@@ -1,0 +1,170 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+class Node{
+public:
+    int val;
+    Node* left;
+    Node* right;
+    int height;
+    Node(int value){
+        this->val = value;
+        this->left = nullptr;
+        this->right = nullptr;
+        this->height = 1;
+    }
+};
+
+class AVL{
+public:
+
+
+
+    int getHeight(Node* node){
+        if(node==nullptr) return 0;
+        return node->height;
+    }
+
+    bool isBalanced(Node* node){
+        if(node== nullptr) return true;
+        return abs(getHeight(node->left)- getHeight(node->right))<=1 && isBalanced(node->left) && isBalanced(node->right);
+    }
+
+    bool isEmpty(Node* node){
+        if(node==nullptr) return true;
+        return false;
+    }
+
+    Node* insert(Node* node,int val){
+        if(node==nullptr){
+            node = new Node(val);
+            return node;
+        }
+        if(val<node->val){
+            node->left = insert(node->left,val);
+        }
+        else if(val>node->val){
+            node->right = insert(node->right,val);
+        }
+        else{
+            return node;
+        }
+
+        node->height = max(getHeight(node->left), getHeight(node->right))+1;
+        return rotate(node);
+    }
+
+    Node* rotate(Node* node){
+        if(node== nullptr) return nullptr;
+        if(getHeight(node->left) - getHeight(node->right) > 1){//left heavy
+            if(getHeight(node->left->left) - getHeight(node->left->right) > 0){//left left
+                return rightRotate(node);
+            }
+
+            if(getHeight(node->left->left) - getHeight(node->left->right)<0) {//left right
+                node->left = leftRotate(node->left);
+                return rightRotate(node);
+            }
+        }
+
+
+        if(getHeight(node->left) - getHeight(node->right) < -1) {//right heavy
+            if(getHeight(node->right->left) - getHeight(node->right->right) >0){//right left
+                node->right = rightRotate(node->right);
+                return leftRotate(node);
+            }
+            if(getHeight(node->right->left) - getHeight(node->right->right)<0){//right right
+                return leftRotate(node);
+            }
+        }
+
+        return node;
+
+
+    }
+
+
+    // Utility to calculate balance factor
+    int getBalanceFactor(Node* node) {
+        if (node == nullptr) return 0;
+        return getHeight(node->left) - getHeight(node->right);
+    }
+
+// Recursive function to display the tree
+    void displayTree(Node* root, int space = 0, int level = 0) {
+        const int COUNT = 20; // Spacing for display
+
+        if (root == nullptr) return;
+
+        // Increase distance between levels
+        space += COUNT;
+
+        // Display right subtree first (to appear on top when printed)
+        displayTree(root->right, space, level + 1);
+
+        // Print current node after padding with spaces
+        cout << endl;
+        cout << setw(space) << root->val;
+        cout << " (h=" << root->height << ", bf=" << getBalanceFactor(root) << ")";
+
+        // Display left subtree
+        displayTree(root->left, space, level + 1);
+    }
+
+
+    Node* leftRotate(Node* p){
+        if(p==nullptr) return nullptr;
+        Node* c = p->right;
+        Node* t = c->left;
+
+        p->right = t;
+        c->left = p;
+
+        p->height = max(getHeight(p->left), getHeight(p->right))+1;
+        c->height = max(getHeight(c->left), getHeight(c->right))+1;
+
+        return c;
+
+
+    }
+
+    Node* rightRotate(Node* p){
+        if(p==nullptr) return nullptr;
+        Node* c = p->left;
+        Node* t = c->right;
+
+        p->left = t;
+        c->right = p;
+
+        p->height = max(getHeight(p->left), getHeight(p->right))+1;
+        c->height = max(getHeight(c->left), getHeight(c->right))+1;
+
+        return c;
+
+    }
+
+
+
+
+
+};
+
+
+
+
+
+int main(){
+
+    Node* root=nullptr;
+    vector<int> v = {1,2,3,4,5,6,7,8,9,10};
+    AVL av = AVL();
+    for(auto x:v){
+        root = av.insert(root,x);
+    }
+//    root = av.insert(root,11);
+//    root = av.insert(root,12);
+
+    av.displayTree(root);
+
+
+}
