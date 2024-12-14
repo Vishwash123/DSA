@@ -1,0 +1,179 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+class segT{
+public:
+    vector<int> arr;
+    int size;
+    int actsize;
+    vector<int> lazy;
+    segT(int s){
+        this->actsize = s;
+        this->size=4*s;
+        arr.resize(size,0);
+        lazy.resize(size,0);
+    }
+
+    void createUtil(int i,int l,int r,vector<int> &v){
+        if(l>r) return;
+        if(l==r) {
+            arr[i] = v[l];
+            return;
+        }
+        int mid = l  + (r-l)/2;
+        createUtil(2*i+1,l,mid,v);
+        createUtil(2*i+2,mid+1,r,v);
+        arr[i] = arr[2*i+1] + arr[2*i+2];
+
+    }
+
+    void create(vector<int> &v){
+        createUtil(0,0,v.size()-1,v);
+    }
+
+    void pointUpdateUtil(int i,int l,int r,int ind,int val){
+        if(l>r) return;
+        if(l==r){
+
+            arr[i]= val;
+//            print();
+            return;
+        }
+        int mid = l + (r-l)/2;
+        if(ind<=mid){
+            pointUpdateUtil(2*i+1,l,mid,ind,val);
+        }
+        else{
+            pointUpdateUtil(2*i+2,mid+1,r,ind,val);
+        }
+
+        arr[i] = arr[2*i+1] + arr[2*i+2];
+//        print();
+
+    }
+
+    int queryUtil(int i,int qs,int qe,int ss,int se){
+        if(lazy[i]!=0){
+            arr[i] += (se-ss+1)*lazy[i];
+            if(ss!=se){
+                lazy[2*i+1] +=lazy[i];
+                lazy[2*i+1] +=lazy[i];
+            }
+            lazy[i]= 0;
+        }
+        if(qs>se || qe<ss) return 0;
+        if(qs<=ss && qe>=se) return arr[i];
+        int mid = ss + (se-ss)/2;
+        int left = queryUtil(2*i+1,qs,qe,ss,mid);
+        int right = queryUtil(2*i+2,qs,qe,mid+1,se);
+        return left + right;
+    }
+
+
+    int query(int i,int j){
+        return queryUtil(0,i,j,0,(size/4)-1);
+    }
+
+    void pointUpdate(int ind,int val){
+        pointUpdateUtil(0,0,(size/4)-1,ind,val);
+    }
+
+    void rangeUpdateUtil(int i,int l,int r,int rs,int re,int val){
+
+        if(lazy[i]!=0){
+            arr[i]+=(r-l+1) * lazy[i]; //update current value due to pending updates
+            if(l!=r) { //for non leaf nodes
+                lazy[2 * i + 1] += lazy[i];//propagate to children for updates
+                lazy[2 * i + 2] += lazy[i];
+            }
+            lazy[i] = 0;
+        }
+        //out of range
+        if(r<rs || re<l || l>r) return;
+        //within range
+        if(rs<=l && re>=r){ //update current value due to current updates
+            arr[i]+=(r-l+1)*val;
+            if(l!=r) {
+                lazy[2 * i + 1] += val;
+                lazy[2 * i + 2] += val;
+            }
+            return;
+        }
+        //overlapping
+        int mid = l + (r-l)/2;
+        rangeUpdateUtil(2*i+1,l,mid,rs,re,val);
+        rangeUpdateUtil(2*i+2,mid+1,r,rs,re,val);
+        arr[i] = arr[2*i+1] + arr[2*i+2];
+
+
+    }
+
+//    void rangeUpdateUtil(int i,int l,int r,int rs,int re,int val,vector<int> &lazy){
+//        if(lazy!=)
+//    }
+
+    void rangeUpdate(int i,int j,int val){
+
+        rangeUpdateUtil(0,0,(size/4)-1,i,j,val);
+    }
+
+
+    void print(){
+        for(int i=0;i<size;i++){
+            cout<<arr[i]<<" ";
+        }
+        cout<<endl;
+    }
+
+
+
+
+};
+int main(){
+
+    //RANGE UPDATES  : NOT A SINGLE INDEX BUT AND ENTIRE RANGE
+    //IF WE USE POINT UPDATE IT WILL TAKE NLOGN TIME
+    //LAZY PROPAGATION :
+    /*
+
+    EG : FROM INDEX 2 TO 5 ADD 2
+
+
+
+     LAZY PROPAGATION DOESNT EXACTLY UPDATE THE SEGMENT TREE AS SOON AS A QUERY RUNS IT UPDATES ONLY IF ITS NEEDED
+
+
+
+     
+
+
+
+
+
+     */
+    vector<int> v = {3,1,2,7};
+    segT st = segT(v.size());
+    st.create(v);
+    st.print();
+    st.pointUpdate(1,10);
+    st.print();
+    st.rangeUpdate(1,3,10);
+    st.print();
+    for(auto x:st.lazy){
+        cout<<x<<" ";
+    }
+    cout<<endl;
+    cout<<st.query(0,3)<<endl;
+    cout<<st.query(0,2)<<endl;
+    cout<<st.query(0,1)<<endl;
+    cout<<st.query(0,0)<<endl;
+    cout<<st.query(2,3)<<endl;
+    cout<<st.query(0,2)<<endl;
+    cout<<st.query(0,2)<<endl;
+    cout<<st.query(0,2)<<endl;
+    st.print();
+    for(auto x:st.lazy){
+        cout<<x<<" ";
+    }
+    cout<<endl;
+}
