@@ -1,0 +1,307 @@
+//#include <bits/stdc++.h>
+//using namespace std;
+//class Node{
+//public:
+//    map<char,Node*> links;
+//    bool endOfWord = false;
+//    int noOfWordsEndingWith  = 0;
+//    int wordsSharingPrefix= 0;
+//
+//    bool containsKey(char ch)
+//    {
+//        return (links.find(ch)!=links.end());
+//    }
+//
+//    void put(char ch,Node* node)
+//    {
+//        links[ch] = node;
+//    }
+//
+//    Node* get(char ch)
+//    {
+//        return links[ch];
+//    }
+//
+//    void incPrefix(){
+//        wordsSharingPrefix++;
+//    }
+//
+//    void incEnd(){
+//        noOfWordsEndingWith++;
+//    }
+//
+//    void decPrefix(){
+//        wordsSharingPrefix--;
+//    }
+//
+//    void decEnd(){
+//        noOfWordsEndingWith++;
+//    }
+//
+//    void setEnd(){
+//        endOfWord=true;
+//    }
+//
+//    bool isEnd(){
+//        return endOfWord;
+//    }
+//
+//
+//
+//
+//
+//
+//
+//
+//};
+//
+//
+//class Trie{
+//public:
+//    Node* root;
+//    Trie(){
+//        root = new Node();
+//    }
+//
+//    void insert(string word)
+//    {
+//        Node* node = root;
+//        for (int i=0;i<word.size();i++)
+//        {
+//            if(!node->containsKey(word[i]))
+//            {
+//                node->put(word[i],new Node());
+//            }
+//            node = node->get(word[i]);
+//            node->incPrefix();
+//        }
+//        node->setEnd();
+//        node->incEnd();
+//    }
+//
+//    bool search(string word)
+//    {
+//        Node* node = root;
+//        for (int i=0;i<word.size();i++)
+//        {
+//            if(!node->containsKey(word[i]))
+//            {
+//                return false;
+//            }
+//            node = node->get(word[i]);
+//
+//        }
+//
+//        return node->isEnd();
+//    }
+//
+//
+//    bool startsWith(string word){
+//        Node* node = root;
+//        for (int i=0;i<word.size();i++)
+//        {
+//            if(!node->containsKey(word[i]))
+//            {
+//                return false;
+//            }
+//            node = node->get(word[i]);
+//
+//        }
+//
+//        return true;
+//    }
+//
+//    int countWordEqualTo(string word)
+//    {
+//        Node* node = root;
+//        for (int i=0;i<word.size();i++)
+//        {
+//            if(!node->containsKey(word[i]))
+//            {
+//                return 0;
+//            }
+//            node = node->get(word[i]);
+//
+//        }
+//
+//        return node->noOfWordsEndingWith;
+//    }
+//
+//    int countWordsStartingWith(string word)
+//    {
+//        Node* node = root;
+//        for (int i=0;i<word.size();i++)
+//        {
+//            if(!node->containsKey(word[i]))
+//            {
+//                return 0;
+//            }
+//            node = node->get(word[i]);
+//
+//        }
+//
+//        return node->wordsSharingPrefix;
+//    }
+//
+//
+//
+//    void traverse(string word)
+//    {
+//        Node* node = root;
+//        for (int i=0;i<word.size();i++)
+//        {
+//            if(!node->containsKey(word[i]))
+//            {
+//                return;
+//            }
+//            cout<<word[i];
+//            node = node->get(word[i]);
+//            cout<<" -> words Sharing Prefix : "<<node->wordsSharingPrefix<<" and words Ending with : "<<node->noOfWordsEndingWith<<endl;
+//
+//
+//        }
+//    }
+//
+//
+//
+//};
+//
+//
+//int main() {
+//
+//    Trie t = Trie();
+//    vector<string> v = {"n","ni","nin","ninj","ninja","ninga"};
+//    cout<<"CHANGES IN REAL TIME : "<<endl;
+//    for (auto x:v)
+//    {
+//        t.insert(x);
+//        cout<<"For "<<x<<" : "<<endl;
+//        t.traverse(x);
+//    }
+//
+//    cout<<endl<<"CHANGES AFTER INSERTION : "<<endl;
+//
+//    for(auto x:v) {
+//        cout<<"For "<<x<<" : "<<endl;
+//        t.traverse(x);
+//    }
+//
+//
+//
+//
+//
+//}
+#include <bits/stdc++.h>
+using namespace std;
+class Node{
+public:
+    map<char,Node*> mp;
+    bool endOfWord = false;
+
+    bool containsKey(char ch)
+    {
+        return (mp.find(ch)!=mp.end());
+    }
+
+    void put(char ch,Node* node)
+    {
+        mp[ch] = node;
+    }
+    Node* get(char ch)
+    {
+        return mp[ch];
+    }
+
+    void setEnd(){
+        endOfWord = true;
+    }
+
+    bool isEnd(){
+        return true;
+    }
+};
+
+
+
+
+
+class Trie{
+public:
+    Node* root;
+    Trie(){
+         root = new Node();
+    }
+
+    void insert(string word)
+    {
+        Node* node = root;
+        for (int i=0;i<word.size();i++)
+        {
+            cout<<"l"<<endl;
+            if(!(node->containsKey(word[i])))
+            {
+                cout<<"m"<<endl;
+                node->put(word[i],new Node());
+
+            }
+
+            node = node->get(word[i]);
+
+
+        }
+
+        node->setEnd();
+    }
+
+    bool isComplete(string word)
+    {
+        Node* node = root;
+        for (int i=0;i<word.size();i++)
+        {
+            if(!node->containsKey(word[i]))
+            {
+                return false;
+            }
+            node= node->get(word[i]);
+
+            if(!node->endOfWord) return false;
+        }
+
+        return true;
+    }
+};
+string completeString(int n, vector<string> &a){
+    // Write your code here.
+    Trie t = Trie();
+
+    for (auto x:a)
+    {
+
+        t.insert(x);
+    }
+
+
+    string ans = "";
+    for(auto x:a)
+    {
+        if(t.isComplete(x))
+        {
+            if(ans.length()<x.length())
+            {
+                ans = x;
+            }
+            else if(ans.length()==x.length() && x<ans)
+            {
+                ans = x;
+            }
+        }
+    }
+
+    return ans;
+}
+
+
+int main(){
+    vector<string> v = {"n","ni","nin","ninj","ninja","ninga"};
+    cout<< completeString(6, v);
+}
